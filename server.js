@@ -52,10 +52,12 @@ const User = sequelize.define('User', {
 const Product = sequelize.define('Product', {
     name: { type: DataTypes.STRING, allowNull: false },
     price: { type: DataTypes.FLOAT, allowNull: false },
-    image: { type: DataTypes.STRING },
+    image: { type: DataTypes.STRING }, // Main image
+    images: { type: DataTypes.TEXT }, // JSON string for multiple images
     category: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT },
     quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
+    shippingFee: { type: DataTypes.FLOAT, defaultValue: 0 },
     soldCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     colors: { type: DataTypes.STRING } // Comma-separated colors
 });
@@ -148,40 +150,58 @@ app.get('/api/products/:id', async (req, res) => {
 });
 
 // Routes - Products (Admin CRUD)
-app.post('/api/products', authenticateToken, upload.single('image'), async (req, res) => {
+app.post('/api/products', authenticateToken, upload.array('productImages', 10), async (req, res) => {
+    console.log('--- POST /api/products ---');
+    console.log('Files received:', req.files ? req.files.length : 0);
     try {
-        const { price, quantity, soldCount } = req.body;
+        const { price, quantity, soldCount, shippingFee } = req.body;
+        const uploadedFiles = req.files || [];
+        const imagePaths = uploadedFiles.map(f => `/uploads/${f.filename}`);
+        
         const productData = {
             ...req.body,
             price: price ? parseFloat(price) : 0,
             quantity: quantity ? parseInt(quantity) : 0,
+            shippingFee: shippingFee ? parseFloat(shippingFee) : 0,
             soldCount: soldCount ? parseInt(soldCount) : 0,
-            image: req.file ? `/uploads/${req.file.filename}` : req.body.image
+            image: imagePaths.length > 0 ? imagePaths[0] : (req.body.image || ''),
+            images: JSON.stringify(imagePaths.length > 0 ? imagePaths : (req.body.images ? (typeof req.body.images === 'string' ? JSON.parse(req.body.images) : req.body.images) : []))
         };
         const product = await Product.create(productData);
+        console.log('Product created successfully:', product.id);
         res.status(201).json(product);
     } catch (error) {
+        console.error('Error creating product:', error);
         res.status(400).json({ message: error.message });
     }
 });
 
-app.put('/api/products/:id', authenticateToken, upload.single('image'), async (req, res) => {
+app.put('/api/products/:id', authenticateToken, upload.array('productImages', 10), async (req, res) => {
+    console.log(`--- PUT /api/products/${req.params.id} ---`);
+    console.log('Files received:', req.files ? req.files.length : 0);
     try {
         const product = await Product.findByPk(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
         
-        const { price, quantity, soldCount } = req.body;
+        const { price, quantity, soldCount, shippingFee } = req.body;
+        const uploadedFiles = req.files || [];
+        const imagePaths = uploadedFiles.map(f => `/uploads/${f.filename}`);
+        
         const updateData = {
             ...req.body,
             price: price ? parseFloat(price) : product.price,
             quantity: quantity ? parseInt(quantity) : product.quantity,
+            shippingFee: shippingFee ? parseFloat(shippingFee) : product.shippingFee,
             soldCount: soldCount ? parseInt(soldCount) : product.soldCount,
-            image: req.file ? `/uploads/${req.file.filename}` : product.image
+            image: imagePaths.length > 0 ? imagePaths[0] : product.image,
+            images: imagePaths.length > 0 ? JSON.stringify(imagePaths) : product.images
         };
         
         await product.update(updateData);
+        console.log('Product updated successfully');
         res.json(product);
     } catch (error) {
+        console.error('Error updating product:', error);
         res.status(400).json({ message: error.message });
     }
 });
@@ -238,81 +258,84 @@ sequelize.sync({ alter: true })
             const productCount = await Product.count();
             if (productCount === 0) {
                 const initialProducts = [
-                    // Appliances
+                    // Women's Fashion
                     {
-                        name: "Portable Mini Refrigerator 4L Car Fridge Cooler Warmer",
+                        name: "Women's Elegant Summer Floral Print Dress",
+                        price: 24.99,
+                        image: "https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg",
+                        images: JSON.stringify([
+                            "https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg",
+                            "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg",
+                            "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg"
+                        ]),
+                        category: "Women's Fashion",
+                        description: "Beautiful floral print dress perfect for summer outings. Breathable fabric and elegant design.",
+                        quantity: 100,
+                        colors: "Blue, Pink, Yellow",
+                        shippingFee: 0
+                    },
+                    // Men's Fashion
+                    {
+                        name: "Men's Casual Slim Fit Cotton Polo Shirt",
+                        price: 18.50,
+                        image: "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg",
+                        images: JSON.stringify([
+                            "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg",
+                            "https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg"
+                        ]),
+                        category: "Men's Fashion",
+                        description: "High-quality cotton polo shirt for a smart-casual look. Available in multiple colors.",
+                        quantity: 150,
+                        colors: "Black, White, Navy",
+                        shippingFee: 2.50
+                    },
+                    // Phones & Telecommunications
+                    {
+                        name: "Global Version Smartphone 5G 12GB+256GB",
+                        price: 299.00,
+                        image: "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg",
+                        images: JSON.stringify([
+                            "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg",
+                            "https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg"
+                        ]),
+                        category: "Phones & Telecommunications",
+                        description: "Powerful 5G smartphone with high-resolution camera and long-lasting battery.",
+                        quantity: 50,
+                        colors: "Black, Silver",
+                        shippingFee: 0
+                    },
+                    // Computer & Office
+                    {
+                        name: "Wireless Mechanical Gaming Keyboard RGB",
+                        price: 45.00,
+                        image: "https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg",
+                        category: "Computer & Office",
+                        description: "Tactile mechanical switches with customizable RGB lighting. Perfect for gaming and office work.",
+                        quantity: 80,
+                        colors: "Black, White",
+                        shippingFee: 5.00
+                    },
+                    // Consumer Electronics
+                    {
+                        name: "Noise Cancelling Bluetooth Headphones Over-Ear",
+                        price: 89.99,
+                        image: "https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg",
+                        category: "Consumer Electronics",
+                        description: "Immersive sound quality with active noise cancellation. 40-hour battery life.",
+                        quantity: 60,
+                        colors: "Black, Gray",
+                        shippingFee: 0
+                    },
+                    // Home & Appliances
+                    {
+                        name: "Portable Mini Refrigerator 4L Car Fridge",
                         price: 35.99,
                         image: "https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg",
-                        category: "appliances",
-                        description: "Compact 4-liter mini fridge, perfect for cars, offices, and dorms. Features both cooling and warming functions. Eco-friendly and quiet operation.",
+                        category: "Home, Pet & Appliances",
+                        description: "Compact 4-liter mini fridge, perfect for cars and offices.",
                         quantity: 150,
-                        colors: "White, Pink, Blue"
-                    },
-                    {
-                        name: "Xiaomi Mijia Robot Vacuum Mop 3C Enhanced Edition",
-                        price: 189.50,
-                        image: "https://ae01.alicdn.com/kf/S7e19395f87744383a8f5984407987e38N.jpg",
-                        category: "appliances",
-                        description: "LDS Laser Navigation, 5000Pa Suction Power, Smart App Control. Efficiently cleans every corner of your home.",
-                        quantity: 45,
-                        colors: "White"
-                    },
-                    // Automotive
-                    {
-                        name: "Universal Car Seat Cover Set Breathable Leather",
-                        price: 45.20,
-                        image: "https://ae01.alicdn.com/kf/S0c86311654e549118086a44f45447a16E.jpg",
-                        category: "automotive",
-                        description: "High-quality PU leather seat covers, waterproof and easy to clean. Fits most sedan and SUV models.",
-                        quantity: 80,
-                        colors: "Black, Beige, Red"
-                    },
-                    {
-                        name: "12V 150PSI Portable Car Air Compressor Tire Inflator",
-                        price: 28.15,
-                        image: "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg",
-                        category: "automotive",
-                        description: "Digital display tire inflator with auto-shutoff. Includes LED light for emergency use.",
-                        quantity: 200,
-                        colors: "Black"
-                    },
-                    // Clothing
-                    {
-                        name: "Men's Lightweight Waterproof Windbreaker Jacket",
-                        price: 19.99,
-                        image: "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg",
-                        category: "clothing",
-                        description: "Outdoor sports jacket for hiking, camping, and daily wear. Breathable and quick-dry material.",
-                        quantity: 300,
-                        colors: "Navy Blue, Green, Gray"
-                    },
-                    {
-                        name: "Women's High Waist Seamless Yoga Pants Leggings",
-                        price: 12.45,
-                        image: "https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg",
-                        category: "clothing",
-                        description: "Stretchy and squat-proof fitness leggings. Perfect for gym, yoga, and casual wear.",
-                        quantity: 500,
-                        colors: "Purple, Black, Pink, Blue"
-                    },
-                    // Electronics (Deals)
-                    {
-                        name: "TWS Wireless Bluetooth Earbuds with Charging Case",
-                        price: 9.90,
-                        image: "https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg",
-                        category: "deals",
-                        description: "HiFi Stereo Sound, Bluetooth 5.3, Long Battery Life. Compatible with iOS and Android.",
-                        quantity: 1000,
-                        colors: "Black, White"
-                    },
-                    {
-                        name: "Smart Watch Ultra Series 8 NFC GPS Tracker",
-                        price: 24.80,
-                        image: "https://ae01.alicdn.com/kf/S4c89f7f4585c4909a39f5062a45447a16E.jpg",
-                        category: "deals",
-                        description: "Fitness tracker with heart rate monitor, sleep tracking, and Bluetooth calling. IP68 waterproof.",
-                        quantity: 150,
-                        colors: "Orange, Black, Gray"
+                        colors: "White, Pink",
+                        shippingFee: 10.00
                     }
                 ];
                 await Product.bulkCreate(initialProducts);

@@ -129,18 +129,16 @@
         </div>
 
         <!-- Navigation Categories -->
-        <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide hidden md:block">
             <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
-                <a href="category.html?cat=all" class="flex items-center gap-2 cursor-pointer bg-gray-100 px-4 py-1.5 rounded-full hover:bg-gray-200">
-                    <i class="fas fa-bars"></i>
-                    <span>All Categories</span>
-                </a>
-                <a href="category.html?cat=deals" class="text-red-500 font-bold border-b-2 border-red-500 pb-1">Bundle deals</a>
-                <a href="category.html?cat=choice" class="hover:text-red-500">Choice</a>
-                <a href="category.html?cat=automotive" class="hover:text-red-500">Automotive</a>
-                <a href="category.html?cat=appliances" class="hover:text-red-500">Appliances</a>
-                <a href="category.html?cat=clothing" class="hover:text-red-500">Women's Clothing</a>
-                <a href="category.html?cat=clothing" class="hover:text-red-500">Men's Clothing</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">SuperDeals</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Choice</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">AliExpress Business</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Home & Garden</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Hair & Wigs</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Men's Clothing</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Accessories</a>
+                <a href="category.html?cat=all" class="hover:text-red-500">Consumer Electronics</a>
                 <a href="category.html?cat=all" class="flex items-center gap-1 cursor-pointer hover:text-red-500">
                     <span>More</span>
                     <i class="fas fa-chevron-down text-[10px]"></i>
@@ -150,6 +148,143 @@
     </header>
 
     <main class="container mx-auto px-4 py-6">
+        <!-- Hero Section with Categories Sidebar -->
+        <div class="flex flex-col lg:flex-row gap-6 mb-12">
+            <!-- Categories Sidebar -->
+            <aside class="hidden lg:block w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex-shrink-0">
+                <h2 class="font-bold text-base mb-4 flex items-center gap-2">
+                    <i class="fas fa-list text-xs"></i> Categories
+                </h2>
+                <nav class="space-y-1">
+                    <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-venus text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Women's Fashion</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Men's Fashion" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-mars text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Men's Fashion</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Phones & Telecommunications" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-mobile-alt text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Phones & Telecom</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Computer, Office & Security" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-laptop text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Computer & Office</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Consumer Electronics" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-tv text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Electronics</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Jewelry & Watches" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-gem text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Jewelry & Watches</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Home, Pet & Appliances" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-home text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Home & Appliances</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Bags & Shoes" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-shopping-bag text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Bags & Shoes</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Toys, Kids & Babies" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-child text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Toys & Kids</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Outdoor Fun & Sports" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-running text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Sports & Outdoor</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Beauty, Health & Hair" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-heart text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Beauty & Health</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Automobiles & Motorcycles" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-car text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Automotive</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Hero Banner -->
+            <div class="flex-grow">
+                <div class="relative h-[300px] md:h-[400px] bg-gray-200 rounded-3xl overflow-hidden shadow-sm group">
+                    <img src="https://ae01.alicdn.com/kf/S7e19395f87744383a8f5984407987e38N.jpg" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex flex-col justify-center px-8 md:px-12 text-white">
+                        <h2 class="text-3xl md:text-5xl font-black italic mb-4 tracking-tighter uppercase">Big Deals on<br>New Tech</h2>
+                        <p class="text-sm md:text-base font-medium mb-6 max-w-md">Upgrade your home with the latest smart appliances and consumer electronics. Limited time offer!</p>
+                        <a href="category.html?cat=all" class="bg-white text-black font-bold px-8 py-3 rounded-full w-fit hover:bg-red-500 hover:text-white transition-all shadow-lg">Shop Now</a>
+                    </div>
+                    <!-- Navigation Dots -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-white shadow-sm"></div>
+                        <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm"></div>
+                        <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome/User Section -->
+            <div class="hidden xl:block w-64 space-y-4">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-1">Welcome to AliExpress</h3>
+                    <p class="text-[10px] text-gray-400 mb-6">Join us for more savings and exclusive deals!</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="bg-black text-white text-[10px] font-bold py-2 rounded-full hover:bg-gray-800 transition-colors">Join</button>
+                        <button class="bg-gray-100 text-black text-[10px] font-bold py-2 rounded-full hover:bg-gray-200 transition-colors">Sign in</button>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl shadow-sm p-6 text-white overflow-hidden relative group">
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-bold uppercase opacity-80 mb-1">Welcome Deal</p>
+                        <h3 class="text-lg font-bold mb-4 leading-tight">Your first item<br>from $0.01</h3>
+                        <a href="category.html?cat=deals" class="inline-block bg-white text-red-500 text-[10px] font-bold px-4 py-2 rounded-full hover:bg-red-50 transition-colors shadow-md">Get it now</a>
+                    </div>
+                    <i class="fas fa-gift absolute -bottom-4 -right-4 text-8xl opacity-10 rotate-12 group-hover:scale-110 transition-transform"></i>
+                </div>
+            </div>
+        </div>
+
         <!-- Today's Deals Section -->
         <section class="mb-8">
             <h2 class="text-2xl font-bold text-center mb-6">Today's deals</h2>

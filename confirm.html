@@ -855,24 +855,58 @@
                 return;
             }
 
-            container.innerHTML = cart.map(item => `
-                <div class="flex gap-4">
-                    <img src="${item.image}" class="w-20 h-20 object-cover rounded-lg">
-                    <div class="flex-grow">
-                        <h4 class="text-sm font-medium line-clamp-1 mb-1">${item.name}</h4>
-                        ${item.color ? `<p class="text-[10px] text-gray-400 mb-2 uppercase font-bold">Color: ${item.color}</p>` : ''}
-                        <div class="flex items-baseline gap-1 mb-2">
-                            <span class="font-bold">$ ${item.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+            container.innerHTML = cart.map((item, itemIdx) => {
+                const itemImages = item.images || [item.image];
+                const mainImgId = `mainImg-${itemIdx}`;
+                return `
+                <div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-red-100 transition-all group">
+                    <!-- Image Gallery Section -->
+                    <div class="flex flex-col gap-3 w-full md:w-32 flex-shrink-0">
+                        <div class="relative aspect-square bg-white rounded-xl border overflow-hidden shadow-sm">
+                            <img src="${item.image}" id="${mainImgId}" class="w-full h-full object-contain">
+                            <span class="absolute top-2 right-2 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded-lg backdrop-blur-sm">x${item.qty}</span>
                         </div>
-                        <div class="text-xs text-gray-500 font-medium">
-                            Quantity: ${item.qty}
+                        <!-- Small Thumbnails -->
+                        <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                            ${itemImages.map((img) => `
+                                <img src="${img}" 
+                                     onclick="document.getElementById('${mainImgId}').src='${img}'"
+                                     class="w-8 h-8 object-cover rounded-md border border-gray-200 cursor-pointer hover:border-red-500 transition-all flex-shrink-0 bg-white">
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Details Section -->
+                    <div class="flex-grow flex flex-col justify-between py-1">
+                        <div>
+                            <div class="flex justify-between items-start gap-4 mb-2">
+                                <h4 class="text-sm font-bold text-gray-800 line-clamp-2 leading-tight">${item.name}</h4>
+                                <span class="text-base font-black text-black whitespace-nowrap">$ ${(item.price * item.qty).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 items-center mb-4">
+                                ${item.color ? `<span class="text-[10px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-500 font-bold uppercase shadow-sm">Color: ${item.color}</span>` : ''}
+                                <span class="text-[10px] bg-green-50 text-green-600 px-3 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">
+                                    <i class="fas fa-truck-fast text-[8px]"></i> ${item.shippingFee > 0 ? `Shipping: $${item.shippingFee.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Free Shipping'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-[11px]">
+                            <div class="flex items-center gap-4 text-gray-400">
+                                <span class="flex items-center gap-1"><i class="far fa-heart"></i> Add to favorites</span>
+                                <span class="flex items-center gap-1"><i class="far fa-trash-alt"></i> Remove</span>
+                            </div>
+                            <div class="text-gray-500 font-medium">
+                                Unit Price: <span class="text-black font-bold">$ ${item.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
 
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const shipping = 0.00; 
+            const shipping = cart.reduce((sum, item) => sum + (item.shippingFee || 0), 0); 
             const total = subtotal + shipping;
 
             if (subtotalEl) subtotalEl.innerHTML = `$ ${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})} <i class="fas fa-chevron-up text-[8px] text-gray-400"></i>`;

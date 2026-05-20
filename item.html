@@ -25,9 +25,19 @@
             padding: 12px;
             border-bottom: 1px solid #f0f0f0;
         }
-        .specs-label {
-            color: #999;
-            width: 30%;
+        .thumb-img {
+            transition: all 0.2s ease-in-out;
+        }
+        .thumb-img:hover {
+            border-color: #FF4747;
+            transform: scale(1.05);
+        }
+        .thumb-img.active {
+            border-color: #FF4747;
+            border-width: 2px;
+        }
+        #productImage {
+            transition: opacity 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -119,10 +129,8 @@
             <!-- Left: Images -->
             <div class="w-full lg:w-1/2 flex flex-col-reverse md:flex-row gap-4">
                 <!-- Thumbnails -->
-                <div class="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:w-16 scrollbar-hide">
-                    <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
-                    <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
-                    <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
+                <div id="thumbnailContainer" class="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:w-16 scrollbar-hide">
+                    <!-- Dynamic Thumbnails -->
                 </div>
                 <!-- Main Image -->
                 <div class="flex-grow">
@@ -184,7 +192,7 @@
                     <div class="flex items-start gap-2">
                         <i class="fas fa-truck text-gray-400 mt-0.5"></i>
                         <div>
-                            <p class="font-bold">Shipping: $109.47</p>
+                            <p class="font-bold">Shipping: <span id="displayShippingFee">$109.47</span></p>
                             <p class="text-gray-500">Delivery: Jun 20</p>
                         </div>
                     </div>
@@ -208,7 +216,7 @@
                         </div>
                     </div>
                     <p id="stockStatus" class="text-[10px] text-gray-500">510 available</p>
-                    <a href="confirm.html" class="block w-full bg-black text-white text-center font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">Buy now</a>
+                    <button id="buyNowBtn" class="block w-full bg-black text-white text-center font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">Buy now</button>
                     <button id="addToCartBtn" class="w-full border-2 border-black text-black font-bold py-3 rounded-full hover:bg-gray-50 transition-colors">Add to cart</button>
                     <div class="flex gap-4 pt-2">
                         <button class="flex items-center gap-1 text-xs text-gray-600 hover:text-black">
@@ -439,9 +447,34 @@
                 document.title = `AliExpress - ${p.name}`;
                 document.getElementById('productName').textContent = p.name;
                 document.getElementById('productPrice').textContent = `$${p.price.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                
+                const shippingFeeEl = document.getElementById('displayShippingFee');
+                if (shippingFeeEl) {
+                    shippingFeeEl.textContent = p.shippingFee > 0 ? `$${p.shippingFee.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Free Shipping';
+                }
+
+                // Image Gallery Logic
                 const mainImg = document.getElementById('productImage');
-                mainImg.src = p.image;
-                mainImg.onerror = () => mainImg.src = 'https://via.placeholder.com/640x640?text=Product+Image';
+                const thumbContainer = document.getElementById('thumbnailContainer');
+                let productImages = [];
+                try {
+                    productImages = p.images ? JSON.parse(p.images) : [p.image];
+                } catch (e) {
+                    productImages = [p.image];
+                }
+
+                if (productImages.length > 0) {
+                    mainImg.src = productImages[0];
+                    mainImg.onerror = () => mainImg.src = 'https://via.placeholder.com/640x640?text=Product+Image';
+                    
+                    thumbContainer.innerHTML = productImages.map((img, i) => `
+                        <img src="${img}" 
+                             onclick="updateMainImage('${img}', this)" 
+                             class="thumb-img w-16 h-16 md:w-full border ${i === 0 ? 'active' : 'border-gray-200'} rounded cursor-pointer flex-shrink-0 object-cover"
+                             onerror="this.style.display='none'">
+                    `).join('');
+                }
+
                 document.getElementById('productDescription').textContent = p.description || 'No description available.';
                 document.getElementById('stockStatus').textContent = `${p.quantity} available`;
                 document.getElementById('stockStatus').className = `text-[10px] ${p.quantity > 0 ? 'text-gray-500' : 'text-red-500 font-bold'}`;
@@ -471,6 +504,22 @@
             } catch (e) {
                 console.error('Error loading product:', e);
             }
+        }
+
+        function updateMainImage(src, el) {
+            const mainImg = document.getElementById('productImage');
+            mainImg.style.opacity = '0';
+            setTimeout(() => {
+                mainImg.src = src;
+                mainImg.style.opacity = '1';
+            }, 300);
+            
+            document.querySelectorAll('.thumb-img').forEach(img => {
+                img.classList.remove('active');
+                img.classList.add('border-gray-200');
+            });
+            el.classList.add('active');
+            el.classList.remove('border-gray-200');
         }
 
         function selectColor(color, el) {
@@ -507,15 +556,24 @@
             if (cartCountEl) cartCountEl.textContent = count;
         }
 
-        document.getElementById('addToCartBtn').addEventListener('click', () => {
+        function addToCart(redirect = false) {
             if (!currentProduct) return;
             
             const qty = parseInt(document.getElementById('buyQty').value);
+            let productImages = [];
+            try {
+                productImages = currentProduct.images ? JSON.parse(currentProduct.images) : [currentProduct.image];
+            } catch (e) {
+                productImages = [currentProduct.image];
+            }
+
             const cartItem = {
                 id: currentProduct.id,
                 name: currentProduct.name,
                 price: currentProduct.price,
+                shippingFee: currentProduct.shippingFee || 0,
                 image: currentProduct.image,
+                images: productImages,
                 qty: qty,
                 color: selectedColor
             };
@@ -532,9 +590,15 @@
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
             
-            // Show cart sidebar
-            toggleCart();
-        });
+            if (redirect) {
+                window.location.href = 'confirm.html';
+            } else {
+                toggleCart();
+            }
+        }
+
+        document.getElementById('addToCartBtn').addEventListener('click', () => addToCart(false));
+        document.getElementById('buyNowBtn')?.addEventListener('click', () => addToCart(true));
 
         function toggleCart() {
             const overlay = document.getElementById('cartSidebarOverlay');

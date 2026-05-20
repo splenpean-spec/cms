@@ -71,6 +71,7 @@
                         <th class="px-6 py-4 font-bold text-xs text-gray-500">Image</th>
                         <th class="px-6 py-4 font-bold text-xs text-gray-500">Name</th>
                         <th class="px-6 py-4 font-bold text-xs text-gray-500">Price</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Shipping</th>
                         <th class="px-6 py-4 font-bold text-xs text-gray-500">Quantity</th>
                         <th class="px-6 py-4 font-bold text-xs text-gray-500">Category</th>
                         <th class="px-6 py-4 font-bold text-xs text-gray-500 text-center">Actions</th>
@@ -139,7 +140,7 @@
                     <label class="block text-sm font-bold mb-1">Product Name</label>
                     <input type="text" id="name" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                 </div>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm font-bold mb-1">Price ($)</label>
                             <input type="number" id="price" step="0.01" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
@@ -149,14 +150,27 @@
                             <input type="number" id="quantity" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                         </div>
                         <div>
+                            <label class="block text-sm font-bold mb-1">Shipping ($)</label>
+                            <input type="number" id="shippingFee" step="0.01" value="0.00" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                        </div>
+                        <div>
                             <label class="block text-sm font-bold mb-1">Category</label>
                             <input type="text" id="category" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                         </div>
                     </div>
                 <div>
-                    <label class="block text-sm font-bold mb-1">Product Image</label>
-                    <input type="file" id="image" accept="image/*" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
-                    <p id="imageStatus" class="text-[10px] text-gray-400 mt-1 italic"></p>
+                    <label class="block text-sm font-bold mb-1">Product Images</label>
+                    <div id="dropZone" class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-red-500 transition-all cursor-pointer bg-gray-50 group">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-300 group-hover:text-red-500 mb-2 transition-colors"></i>
+                        <p class="text-xs text-gray-500 font-medium">Click or Drag & Drop images here</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Up to 10 images (JPG, PNG, WEBP)</p>
+                        <input type="file" id="images" accept="image/*" multiple class="hidden">
+                    </div>
+                    <div id="imagePreviewContainer" class="grid grid-cols-5 gap-2 mt-4"></div>
+                    <div id="currentImagesSection" class="mt-4 hidden">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Current Images</p>
+                        <div id="currentImagesPreview" class="flex flex-wrap gap-2"></div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-1">Available Colors (comma separated)</label>
@@ -200,15 +214,18 @@
             else if (tab === 'orders') fetchOrders();
         }
 
+        let allProducts = [];
+
         async function fetchProducts() {
             const res = await fetch('/api/products');
-            const products = await res.json();
+            allProducts = await res.json();
             const list = document.getElementById('productsList');
-            list.innerHTML = products.map(p => `
+            list.innerHTML = allProducts.map(p => `
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-6 py-4"><img src="${p.image}" class="w-12 h-12 object-cover rounded"></td>
                     <td class="px-6 py-4 font-medium">${p.name}</td>
                     <td class="px-6 py-4">$ ${p.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="px-6 py-4 text-xs text-gray-400">$ ${p.shippingFee?.toLocaleString(undefined, {minimumFractionDigits: 2}) || '0.00'}</td>
                     <td class="px-6 py-4">
                         <span class="px-2 py-1 rounded-full text-xs font-bold ${p.quantity > 10 ? 'bg-green-100 text-green-700' : p.quantity > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">
                             ${p.quantity} in stock
@@ -217,7 +234,7 @@
                     <td class="px-6 py-4 text-sm text-gray-500">${p.category || 'N/A'}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-3">
-                            <button onclick='editProduct(${JSON.stringify(p)})' class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                            <button onclick="editProduct(${p.id})" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
                             <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
@@ -246,57 +263,190 @@
             `).join('');
         }
 
-        function openProductModal(p = null) {
-            document.getElementById('productModal').classList.remove('hidden');
-            document.getElementById('modalTitle').textContent = p ? 'Edit Product' : 'Add New Product';
-            document.getElementById('productId').value = p ? p.id : '';
-            document.getElementById('name').value = p ? p.name : '';
-            document.getElementById('price').value = p ? p.price : '';
-            document.getElementById('quantity').value = p ? p.quantity : '0';
-            document.getElementById('category').value = p ? p.category : '';
-            document.getElementById('image').value = '';
-            document.getElementById('imageStatus').textContent = p ? 'Keep empty to maintain current image' : '';
-            document.getElementById('colors').value = p ? (p.colors || '') : '';
-            document.getElementById('description').value = p ? p.description : '';
+        // Drag and Drop & Preview Logic
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('images');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        let currentFiles = [];
+
+        // Handle Click
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // Prevent Default for all Drag Events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+        // Highlight Drop Zone
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.add('border-red-500', 'bg-red-50');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.remove('border-red-500', 'bg-red-50');
+            }, false);
+        });
+
+        // Handle Drop
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }, false);
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            
+            newFiles.forEach(file => {
+                if (currentFiles.length >= 10) return;
+                
+                currentFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'relative aspect-square rounded-lg border overflow-hidden bg-gray-50 group/preview';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <button type="button" class="remove-btn absolute top-1 right-1 bg-black/50 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover/preview:opacity-100 transition-opacity">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    // Add click listener to the remove button
+                    div.querySelector('.remove-btn').addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        const index = currentFiles.indexOf(file);
+                        if (index > -1) {
+                            currentFiles.splice(index, 1);
+                            div.remove();
+                        }
+                    });
+                    
+                    imagePreviewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
-        function closeProductModal() {
-            document.getElementById('productModal').classList.add('hidden');
+        function removePreviewImage(btn) {
+            const div = btn.parentElement;
+            const name = div.dataset.fileName;
+            const size = div.dataset.fileSize;
+            
+            currentFiles = currentFiles.filter(f => f.name !== name || f.size.toString() !== size);
+            div.remove();
         }
+
+        function openProductModal(p = null) {
+             document.getElementById('productModal').classList.remove('hidden');
+             document.getElementById('modalTitle').textContent = p ? 'Edit Product' : 'Add New Product';
+             document.getElementById('productId').value = p ? p.id : '';
+             document.getElementById('name').value = p ? p.name : '';
+             document.getElementById('price').value = p ? p.price : '';
+             document.getElementById('quantity').value = p ? p.quantity : '0';
+             document.getElementById('shippingFee').value = p ? (p.shippingFee || 0) : '0';
+             document.getElementById('category').value = p ? p.category : '';
+             document.getElementById('images').value = '';
+             document.getElementById('imagePreviewContainer').innerHTML = '';
+             currentFiles = []; // Reset current files on open
+             
+             const previewContainer = document.getElementById('currentImagesPreview');
+             const currentSection = document.getElementById('currentImagesSection');
+             previewContainer.innerHTML = '';
+             if (p) {
+                 let pImages = [];
+                 try {
+                     pImages = p.images ? JSON.parse(p.images) : [p.image];
+                 } catch (e) {
+                     pImages = [p.image];
+                 }
+                 
+                 // Clear any null/undefined values
+                 pImages = pImages.filter(img => img);
+                 
+                 if (pImages.length > 0) {
+                     currentSection.classList.remove('hidden');
+                     pImages.forEach(img => {
+                         const imgEl = document.createElement('img');
+                         imgEl.src = img;
+                         imgEl.className = 'w-12 h-12 object-cover rounded border shadow-sm bg-gray-50';
+                         previewContainer.appendChild(imgEl);
+                     });
+                 } else {
+                     currentSection.classList.add('hidden');
+                 }
+             } else {
+                 currentSection.classList.add('hidden');
+             }
+
+             document.getElementById('colors').value = p ? (p.colors || '') : '';
+             document.getElementById('description').value = p ? p.description : '';
+         }
+
+         function closeProductModal() {
+             document.getElementById('productModal').classList.add('hidden');
+             currentFiles = [];
+             document.getElementById('imagePreviewContainer').innerHTML = '';
+         }
 
         document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const id = document.getElementById('productId').value;
-            const formData = new FormData();
-            
-            formData.append('name', document.getElementById('name').value);
-            formData.append('price', document.getElementById('price').value);
-            formData.append('quantity', document.getElementById('quantity').value);
-            formData.append('category', document.getElementById('category').value);
-            formData.append('colors', document.getElementById('colors').value);
-            formData.append('description', document.getElementById('description').value);
-            
-            const imageFile = document.getElementById('image').files[0];
-            if (imageFile) {
-                formData.append('image', imageFile);
-            }
+            const saveBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
 
-            const method = id ? 'PUT' : 'POST';
-            const url = id ? `/api/products/${id}` : '/api/products';
+            try {
+                const id = document.getElementById('productId').value;
+                const formData = new FormData();
+                
+                formData.append('name', document.getElementById('name').value);
+                formData.append('price', document.getElementById('price').value);
+                formData.append('quantity', document.getElementById('quantity').value);
+                formData.append('shippingFee', document.getElementById('shippingFee').value);
+                formData.append('category', document.getElementById('category').value);
+                formData.append('colors', document.getElementById('colors').value);
+                formData.append('description', document.getElementById('description').value);
+                
+                // Use currentFiles array instead of file input directly
+                currentFiles.forEach(file => {
+                    formData.append('productImages', file);
+                });
 
-            const res = await fetch(url, {
-                method,
-                headers: { 
-                    'Authorization': 'Bearer ' + token 
-                },
-                body: formData
-            });
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `/api/products/${id}` : '/api/products';
 
-            if (res.ok) {
-                closeProductModal();
-                fetchProducts();
-            } else {
-                alert('Error saving product');
+                const res = await fetch(url, {
+                    method,
+                    headers: { 
+                        'Authorization': 'Bearer ' + token 
+                    },
+                    body: formData
+                });
+
+                if (res.ok) {
+                    closeProductModal();
+                    fetchProducts();
+                } else {
+                    const data = await res.json().catch(() => ({ message: 'Server error' }));
+                    alert('Error saving product: ' + (data.message || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Submit error:', err);
+                alert('Connection error: ' + err.message);
+            } finally {
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
             }
         });
 
@@ -349,8 +499,9 @@
             }
         });
 
-        function editProduct(p) {
-            openProductModal(p);
+        function editProduct(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (product) openProductModal(product);
         }
 
         function logout() {
