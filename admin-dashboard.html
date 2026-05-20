@@ -29,6 +29,10 @@
                 <i class="fas fa-shopping-bag"></i>
                 <span class="font-bold">Orders</span>
             </button>
+            <button onclick="showTab('settings')" id="settingsTab" class="sidebar-link w-full flex items-center gap-4 px-6 py-4 text-gray-600 hover:bg-gray-50 transition-all">
+                <i class="fas fa-cog"></i>
+                <span class="font-bold">Settings</span>
+            </button>
             <button onclick="logout()" class="w-full flex items-center gap-4 px-6 py-4 text-red-500 hover:bg-red-50 mt-auto transition-all">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="font-bold">Logout</span>
@@ -80,6 +84,31 @@
                     <!-- Dynamic Rows -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settingsView" class="hidden max-w-md mx-auto">
+            <div class="bg-white rounded-2xl shadow-sm border p-8">
+                <h3 class="text-xl font-bold mb-6">Change Admin Password</h3>
+                <form id="changePasswordForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Current Password</label>
+                        <input type="password" id="currentPassword" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">New Password</label>
+                        <input type="password" id="newPassword" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                    <button type="submit" class="w-full aliexpress-bg-red text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all">
+                        Update Password
+                    </button>
+                </form>
+                <p id="passwordMessage" class="mt-4 text-center text-sm font-medium"></p>
+            </div>
         </div>
     </main>
 
@@ -135,11 +164,16 @@
             
             document.getElementById('productsView').classList.toggle('hidden', tab !== 'products');
             document.getElementById('ordersView').classList.toggle('hidden', tab !== 'orders');
-            document.getElementById('tabTitle').textContent = tab === 'products' ? 'Manage Products' : 'Order History';
+            document.getElementById('settingsView').classList.toggle('hidden', tab !== 'settings');
+
+            document.getElementById('tabTitle').textContent = 
+                tab === 'products' ? 'Manage Products' : 
+                tab === 'orders' ? 'Order History' : 'Account Settings';
+            
             document.getElementById('addBtn').classList.toggle('hidden', tab !== 'products');
 
             if (tab === 'products') fetchProducts();
-            else fetchOrders();
+            else if (tab === 'orders') fetchOrders();
         }
 
         async function fetchProducts() {
@@ -244,6 +278,46 @@
             });
             if (res.ok) fetchProducts();
         }
+
+        // Change Password Logic
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const messageEl = document.getElementById('passwordMessage');
+
+            if (newPassword !== confirmNewPassword) {
+                messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                messageEl.textContent = 'New passwords do not match';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/change-password', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    messageEl.className = 'mt-4 text-center text-sm font-medium text-green-600';
+                    messageEl.textContent = 'Password updated successfully!';
+                    e.target.reset();
+                } else {
+                    messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                    messageEl.textContent = data.message || 'Error updating password';
+                }
+            } catch (error) {
+                messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                messageEl.textContent = 'Connection error';
+            }
+        });
 
         function editProduct(p) {
             openProductModal(p);
