@@ -166,29 +166,18 @@
                     </button>
                 </div>
 
-                <!-- Order Item -->
+                <!-- Order Items Container -->
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-bold text-sm">Order confirmation</h3>
                         <p class="text-[10px] text-red-600 flex items-center gap-1"><i class="fas fa-shield-alt"></i> Refund if package lost <i class="fas fa-chevron-right text-[8px]"></i></p>
                     </div>
-                    <div class="flex gap-4">
-                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_220x220.jpg" class="w-20 h-20 object-cover rounded-lg">
-                        <div class="flex-grow">
-                            <div class="flex items-baseline gap-1 mb-2">
-                                <span class="font-bold">$ 2.55</span>
-                                <span class="text-xs text-gray-300 line-through">$ 5.65</span>
-                            </div>
-                            <div class="flex items-center border rounded w-fit">
-                                <button class="px-2 py-0.5 text-gray-400 border-r">-</button>
-                                <span class="px-4 py-0.5 text-xs">1</span>
-                                <button class="px-2 py-0.5 text-gray-400 border-l">+</button>
-                            </div>
-                        </div>
+                    <div id="checkoutItemsList" class="space-y-6">
+                        <!-- Dynamic Cart Items will be injected here -->
                     </div>
                     <div class="mt-6 pt-6 border-t flex flex-col gap-1">
-                        <p class="text-xs font-bold">Shipping: $ 1.99</p>
-                        <p class="text-xs text-gray-500">Delivery: May 20 - 23</p>
+                        <p class="text-xs font-bold">Shipping: <span id="shippingAmount">$ 0.00</span></p>
+                        <p class="text-xs text-gray-500">Delivery: Jun 20 - 23</p>
                     </div>
                 </div>
 
@@ -322,7 +311,7 @@
                     <div class="space-y-4 text-sm mb-6">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-medium">$ 2.55 <i class="fas fa-chevron-up text-[8px] text-gray-400"></i></span>
+                            <span id="checkoutSubtotal" class="font-medium">$ 0.00 <i class="fas fa-chevron-up text-[8px] text-gray-400"></i></span>
                         </div>
                     </div>
                     <div class="border-t pt-4 mb-6">
@@ -330,7 +319,7 @@
                             <div class="flex flex-col">
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-lg font-bold">Total:</span>
-                                    <span id="finalTotalAmount" class="text-2xl font-bold">$ 4.54</span>
+                                    <span id="finalTotalAmount" class="text-2xl font-bold">$ 0.00</span>
                                 </div>
                                 <span class="text-[10px] text-gray-400 flex items-center gap-1">VAT included <i class="far fa-question-circle text-[8px]"></i></span>
                             </div>
@@ -652,7 +641,7 @@
                   <div>
                       <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Payment Amount</label>
                       <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border">
-                          <span class="text-lg font-bold text-black" id="cryptoAmountDisplay">$ 4.54</span>
+                          <span class="text-lg font-bold text-black" id="cryptoAmountDisplay">$ 0.00</span>
                           <span class="text-xs font-medium text-gray-400" id="cryptoSymbolDisplay">USDT</span>
                       </div>
                   </div>
@@ -712,6 +701,49 @@
       </div>
 
     <script>
+        // Initialize checkout data
+        function loadCheckoutData() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('checkoutItemsList');
+            const subtotalEl = document.getElementById('checkoutSubtotal');
+            const totalEl = document.getElementById('finalTotalAmount');
+            const shippingEl = document.getElementById('shippingAmount');
+
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 py-10">Your cart is empty. <a href="index.html" class="text-red-500 font-bold">Go shopping</a></p>`;
+                if (subtotalEl) subtotalEl.innerHTML = `$ 0.00 <i class="fas fa-chevron-up text-[8px] text-gray-400"></i>`;
+                if (shippingEl) shippingEl.textContent = `$ 0.00`;
+                if (totalEl) totalEl.textContent = `$ 0.00`;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex gap-4">
+                    <img src="${item.image}" class="w-20 h-20 object-cover rounded-lg">
+                    <div class="flex-grow">
+                        <h4 class="text-sm font-medium line-clamp-1 mb-1">${item.name}</h4>
+                        ${item.color ? `<p class="text-[10px] text-gray-400 mb-2 uppercase font-bold">Color: ${item.color}</p>` : ''}
+                        <div class="flex items-baseline gap-1 mb-2">
+                            <span class="font-bold">$ ${item.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="text-xs text-gray-500 font-medium">
+                            Quantity: ${item.qty}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const shipping = 0.00; 
+            const total = subtotal + shipping;
+
+            if (subtotalEl) subtotalEl.innerHTML = `$ ${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})} <i class="fas fa-chevron-up text-[8px] text-gray-400"></i>`;
+            if (shippingEl) shippingEl.textContent = `$ ${shipping.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            if (totalEl) totalEl.textContent = `$ ${total.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+        }
+
         function updateLocation(flagCode, currency, countryName) {
             localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
             applyLocation();
@@ -726,7 +758,10 @@
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', applyLocation);
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLocation();
+            loadCheckoutData();
+        });
 
         const placeOrderBtn = document.getElementById('placeOrderBtn');
         const paymentModalOverlay = document.getElementById('paymentModalOverlay');
@@ -851,6 +886,8 @@
         async function saveOrder(method) {
             const totalText = document.getElementById('finalTotalAmount').textContent;
             const total = parseFloat(totalText.replace(/[^0-9.]/g, ''));
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const itemNames = cart.map(i => `${i.name} (${i.qty})`).join(', ');
             
             try {
                 const response = await fetch('/api/orders', {
@@ -858,13 +895,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         customerName: 'Guest Customer',
-                        totalAmount: total || 4.54,
+                        totalAmount: total || 0,
                         paymentMethod: method,
                         status: 'Pending',
-                        items: 'Order from Checkout'
+                        items: itemNames || 'Order from Checkout'
                     })
                 });
-                if (response.ok) console.log('Order saved successfully');
+                if (response.ok) {
+                    console.log('Order saved successfully');
+                    // Clear cart after successful order placement in a real scenario
+                    // localStorage.removeItem('cart'); 
+                }
             } catch (e) {
                 console.error('Failed to save order:', e);
             }
