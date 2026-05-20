@@ -101,6 +101,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- Navigation Categories -->
+        <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
+                <a href="category.html?cat=all" class="flex items-center gap-2 cursor-pointer bg-gray-100 px-4 py-1.5 rounded-full hover:bg-gray-200">
+                    <i class="fas fa-bars"></i>
+                    <span>All Categories</span>
+                </a>
+                <a href="category.html?cat=deals" class="hover:text-red-500">Bundle deals</a>
+                <a href="category.html?cat=choice" class="hover:text-red-500">Choice</a>
+                <a href="category.html?cat=automotive" class="hover:text-red-500">Automotive</a>
+                <a href="category.html?cat=appliances" class="hover:text-red-500">Appliances</a>
+                <a href="category.html?cat=clothing" class="hover:text-red-500">Women's Clothing</a>
+                <a href="category.html?cat=clothing" class="hover:text-red-500">Men's Clothing</a>
+            </div>
+        </nav>
     </header>
 
     <div class="container mx-auto px-4 flex gap-8 py-6">
@@ -248,12 +264,14 @@
                         const res = await fetch('/api/products');
                         const products = await res.json();
                         const container = document.getElementById('dynamicCategoryResults');
+                        const staticResults = container.nextElementSibling;
                         
                         const filtered = products.filter(p => 
-                            p.category?.toLowerCase() === category
+                            category === 'all' || p.category?.toLowerCase() === category
                         );
 
                         if (filtered.length > 0) {
+                            if (staticResults) staticResults.style.display = 'none';
                             container.innerHTML = filtered.map(p => `
                                 <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
                                     <a href="item.html?id=${p.id}" class="block">
@@ -286,6 +304,11 @@
                                     </a>
                                 </div>
                             `).join('');
+                        } else if (category !== 'all') {
+                            container.innerHTML = `<div class="col-span-full py-20 text-center">
+                                <i class="fas fa-search text-4xl text-gray-200 mb-4"></i>
+                                <p class="text-gray-500">No dynamic products found in this category.</p>
+                            </div>`;
                         }
                     } catch (e) {
                         console.error('Error loading category results:', e);

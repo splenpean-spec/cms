@@ -111,17 +111,17 @@
         <!-- Navigation Categories -->
         <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide">
             <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
-                <a href="category.html" class="flex items-center gap-2 cursor-pointer bg-gray-100 px-4 py-1.5 rounded-full hover:bg-gray-200">
+                <a href="category.html?cat=all" class="flex items-center gap-2 cursor-pointer bg-gray-100 px-4 py-1.5 rounded-full hover:bg-gray-200">
                     <i class="fas fa-bars"></i>
                     <span>All Categories</span>
                 </a>
-                <a href="category.html" class="text-red-500 font-bold border-b-2 border-red-500 pb-1">Bundle deals</a>
-                <a href="category.html" class="hover:text-red-500">Choice</a>
-                <a href="category.html" class="hover:text-red-500">Automotive</a>
-                <a href="category.html" class="hover:text-red-500">Appliances</a>
-                <a href="category.html" class="hover:text-red-500">Women's Clothing</a>
-                <a href="category.html" class="hover:text-red-500">Men's Clothing</a>
-                <a href="category.html" class="flex items-center gap-1 cursor-pointer hover:text-red-500">
+                <a href="category.html?cat=deals" class="text-red-500 font-bold border-b-2 border-red-500 pb-1">Bundle deals</a>
+                <a href="category.html?cat=choice" class="hover:text-red-500">Choice</a>
+                <a href="category.html?cat=automotive" class="hover:text-red-500">Automotive</a>
+                <a href="category.html?cat=appliances" class="hover:text-red-500">Appliances</a>
+                <a href="category.html?cat=clothing" class="hover:text-red-500">Women's Clothing</a>
+                <a href="category.html?cat=clothing" class="hover:text-red-500">Men's Clothing</a>
+                <a href="category.html?cat=all" class="flex items-center gap-1 cursor-pointer hover:text-red-500">
                     <span>More</span>
                     <i class="fas fa-chevron-down text-[10px]"></i>
                 </a>
@@ -135,9 +135,9 @@
             <h2 class="text-2xl font-bold text-center mb-6">Today's deals</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Bestsellers -->
-                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                <a href="category.html?cat=bestsellers" class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 block">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">Bestsellers</h3>
+                        <h3 class="font-bold text-lg text-black">Bestsellers</h3>
                         <div class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
                             <i class="fas fa-thumbs-up"></i>
                             <span>Top price & quality picks</span>
@@ -164,12 +164,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- SuperDeals -->
-                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                <a href="category.html?cat=deals" class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 block">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">SuperDeals</h3>
+                        <h3 class="font-bold text-lg text-black">SuperDeals</h3>
                         <div class="bg-pink-50 text-pink-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
                             <i class="fas fa-clock"></i>
                             <span>Up to 80% off</span>
@@ -190,12 +190,12 @@
                             <span class="text-[10px] text-white bg-red-500 px-1 w-fit rounded">-80%</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- TOP BRAND -->
-                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                <a href="category.html?cat=brands" class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 block">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">TOP BRAND</h3>
+                        <h3 class="font-bold text-lg text-black">TOP BRAND</h3>
                         <div class="bg-red-50 text-red-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
                             <i class="fas fa-tag"></i>
                             <span>Limited-time discount</span>
@@ -216,7 +216,7 @@
                             <span class="text-[10px] text-red-600 font-medium">You save $3.95</span>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -261,8 +261,13 @@
                                                      <span class="text-sm font-bold">$</span>
                                                      <span class="text-xl font-bold">${p.price.toLocaleString()}</span>
                                                  </div>
-                                                <div class="flex items-center gap-2 mt-1">
+                                                <div class="flex items-center justify-between mt-1">
                                                     <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                                    ${p.category ? `
+                                                    <a href="category.html?cat=${p.category.toLowerCase()}" class="text-[10px] text-gray-400 hover:text-red-500 hover:underline">
+                                                        ${p.category}
+                                                    </a>
+                                                    ` : ''}
                                                 </div>
                                                 <div class="mt-1 text-[10px] ${p.quantity > 0 ? 'text-green-600' : 'text-red-600'} font-bold">
                                                     ${p.quantity > 0 ? `${p.quantity} in stock` : 'Out of stock'}
