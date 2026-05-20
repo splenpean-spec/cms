@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AliExpress Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f5f5f5; }
+        .aliexpress-red { color: #FF4747; }
+        .aliexpress-bg-red { background-color: #FF4747; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold italic tracking-tighter aliexpress-red mb-2">AliExpress</h1>
+            <p class="text-gray-500 font-medium">Admin Control Panel</p>
+        </div>
+
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Username</label>
+                <input type="text" id="username" required class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                <input type="password" id="password" required class="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+            </div>
+            <button type="submit" class="w-full aliexpress-bg-red text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all shadow-lg">
+                Login to Dashboard
+            </button>
+        </form>
+        <p id="message" class="mt-4 text-center text-sm font-medium"></p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    messageEl.className = 'mt-4 text-center text-sm font-medium text-green-600';
+                    messageEl.textContent = 'Login successful! Redirecting...';
+                    setTimeout(() => window.location.href = 'admin-dashboard.html', 1000);
+                } else {
+                    messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                    messageEl.textContent = data.message || 'Login failed';
+                }
+            } catch (error) {
+                messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                messageEl.textContent = 'Connection error. Make sure the server is running.';
+            }
+        });
+    </script>
+</body>
+</html>

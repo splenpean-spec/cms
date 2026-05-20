@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress - Outdoor 30L/40L Portable Camping Cooler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+        }
+        .aliexpress-red {
+            color: #FF4747;
+        }
+        .aliexpress-bg-red {
+            background-color: #FF4747;
+        }
+        .price-red {
+            color: #FF0000;
+        }
+        .specs-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .specs-label {
+            color: #999;
+            width: 30%;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-6">
+            <div class="flex-shrink-0">
+                <a href="index.html" class="block">
+                    <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
+                </a>
+            </div>
+            <div class="flex-grow max-w-2xl">
+                <form action="search.html" method="GET" class="relative flex items-center">
+                    <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border border-gray-300 rounded-full py-1.5 px-6 focus:outline-none text-sm">
+                    <div class="absolute right-3 flex items-center gap-3 text-gray-400">
+                        <i class="fas fa-camera cursor-pointer hover:text-gray-600"></i>
+                        <div class="w-[1px] h-4 bg-gray-200"></div>
+                        <button type="submit">
+                            <i class="fas fa-search cursor-pointer hover:text-gray-600"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="flex items-center gap-6 text-gray-600 text-sm">
+                <i class="fas fa-qrcode text-xl"></i>
+                <!-- Location Selector -->
+                <div class="relative group" id="locationSelector">
+                    <div class="flex flex-col items-center cursor-pointer">
+                        <div class="flex items-center gap-1">
+                            <img id="currentFlag" src="https://flagcdn.com/w20/us.png" alt="US" class="w-5 h-3 object-cover">
+                        </div>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 top-full pt-2 hidden group-hover:block z-[60]">
+                        <div class="bg-white border rounded-xl shadow-xl p-4 w-48 text-gray-800">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">Ship to / Currency</p>
+                            <div class="space-y-2">
+                                <button onclick="updateLocation('us', 'USD', 'United States')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/us.png" class="w-5 h-3">
+                                    <span class="text-xs">United States / USD</span>
+                                </button>
+                                <button onclick="updateLocation('gb', 'USD', 'United Kingdom')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/gb.png" class="w-5 h-3">
+                                    <span class="text-xs">United Kingdom / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ng', 'USD', 'Nigeria')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ng.png" class="w-5 h-3">
+                                    <span class="text-xs">Nigeria / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ca', 'USD', 'Canada')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3">
+                                    <span class="text-xs">Canada / USD</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1 cursor-pointer">
+                    <i class="far fa-user text-xl"></i>
+                </div>
+                <div class="relative cursor-pointer">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <!-- Product Section -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left: Images -->
+            <div class="w-full lg:w-1/2 flex gap-4">
+                <div class="flex flex-col gap-2 w-16">
+                    <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
+                    <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
+                    <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
+                </div>
+                <div class="flex-grow">
+                    <div class="relative group">
+                        <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg" class="w-full rounded-lg">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/50 rounded-full flex items-center justify-center cursor-pointer">
+                            <i class="fas fa-play text-black ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle: Product Info -->
+            <div class="w-full lg:w-1/3">
+                <h1 class="text-xl font-medium mb-4 leading-tight">Outdoor 30L, 40L Portable Camping Cooler Compressor Cooling Freezer 12V/24V Home Small Refrigerator Car Fridges with Wheels</h1>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-orange-400 text-xs">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">4.6 | 800 sold</span>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold price-red">$393.72</span>
+                        <span class="text-sm text-white bg-red-500 px-1 rounded">28% off</span>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-3 rounded border border-red-100 mb-6">
+                    <span class="text-xs text-red-600 font-medium">$32.92 off per $583.40</span>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium mb-2">Color: <span class="text-gray-500">Dark Grey</span></h3>
+                    <div class="flex gap-2">
+                        <button class="border-2 border-black px-4 py-1.5 text-xs rounded">Dark Grey</button>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium mb-2">Plug Type: <span class="text-gray-500">CN</span></h3>
+                    <div class="flex gap-2">
+                        <button class="border-2 border-black px-4 py-1.5 text-xs rounded">CN</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Buy Sidebar -->
+            <div class="w-full lg:w-64 border rounded-xl p-4 sticky top-20 h-fit">
+                <div class="mb-4">
+                    <h4 class="text-xs font-bold mb-2">Sold By: <span class="text-gray-500">Appliance Mart Store</span></h4>
+                </div>
+                <div class="space-y-4 text-xs">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-truck text-gray-400 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold">Shipping: $109.47</p>
+                            <p class="text-gray-500">Delivery: Jun 20</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-undo text-gray-400 mt-0.5"></i>
+                        <p class="font-bold">Return and refund policy</p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-shield-alt text-gray-400 mt-0.5"></i>
+                        <p class="font-bold">Security & Privacy</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold">Quantity</span>
+                        <div class="flex items-center border rounded">
+                            <button class="px-2 py-1 text-gray-500 border-r">-</button>
+                            <span class="px-3 py-1 text-xs">1</span>
+                            <button class="px-2 py-1 text-gray-500 border-l">+</button>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-500">510 available</p>
+                    <a href="confirm.html" class="block w-full bg-black text-white text-center font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">Buy now</a>
+                    <button class="w-full border-2 border-black text-black font-bold py-3 rounded-full hover:bg-gray-50 transition-colors">Add to cart</button>
+                    <div class="flex gap-4 pt-2">
+                        <button class="flex items-center gap-1 text-xs text-gray-600 hover:text-black">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                        <button class="flex items-center gap-1 text-xs text-gray-600 hover:text-black">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Items Section -->
+        <section class="mt-12">
+            <h2 class="text-lg font-bold mb-6">Related items</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                <!-- Related 1 -->
+                <a href="item.html" class="bg-white rounded-lg p-2 hover:shadow-md transition-shadow cursor-pointer block">
+                    <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_220x220.jpg" class="w-full aspect-square object-cover rounded mb-2">
+                    <p class="text-xs line-clamp-2 mb-1">Larger Capacity 40L Car Co...</p>
+                    <p class="text-sm font-bold">$802.12</p>
+                </a>
+                <!-- Related 2 -->
+                <a href="item.html" class="bg-white rounded-lg p-2 hover:shadow-md transition-shadow cursor-pointer block">
+                    <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_220x220.jpg" class="w-full aspect-square object-cover rounded mb-2">
+                    <p class="text-xs line-clamp-2 mb-1">SuperDeals: 12V Car...</p>
+                    <p class="text-sm font-bold price-red">$1.50</p>
+                </a>
+                <!-- Related 3 -->
+                <a href="item.html" class="bg-white rounded-lg p-2 hover:shadow-md transition-shadow cursor-pointer block">
+                    <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_220x220.jpg" class="w-full aspect-square object-cover rounded mb-2">
+                    <p class="text-xs line-clamp-2 mb-1">Portable Power Station...</p>
+                    <p class="text-sm font-bold">$454.19</p>
+                </a>
+                <!-- Related 4 -->
+                <a href="item.html" class="bg-white rounded-lg p-2 hover:shadow-md transition-shadow cursor-pointer block">
+                    <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg_220x220.jpg" class="w-full aspect-square object-cover rounded mb-2">
+                    <p class="text-xs line-clamp-2 mb-1">Mini Car Fridge 12V...</p>
+                    <p class="text-sm font-bold">$215.80</p>
+                </a>
+                <!-- Related 5 -->
+                <a href="item.html" class="bg-white rounded-lg p-2 hover:shadow-md transition-shadow cursor-pointer block">
+                    <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg_220x220.jpg" class="w-full aspect-square object-cover rounded mb-2">
+                    <p class="text-xs line-clamp-2 mb-1">Cooling Small Fridge...</p>
+                    <p class="text-sm font-bold">$215.80</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Tabs Navigation -->
+        <div class="border-b mt-12 mb-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <div class="flex gap-8 text-sm font-medium">
+                <a href="#" class="border-b-2 border-black pb-4">Customer Reviews</a>
+                <a href="#" class="text-gray-500 pb-4">Specifications</a>
+                <a href="#" class="text-gray-500 pb-4">Description</a>
+                <a href="#" class="text-gray-500 pb-4">Store</a>
+                <a href="#" class="text-gray-500 pb-4">More to love</a>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-6">Reviews</h2>
+            <div class="flex items-center gap-4 mb-8">
+                <span class="text-4xl font-bold">4.6</span>
+                <div class="flex flex-col">
+                    <div class="flex text-orange-400 text-sm">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span class="text-xs text-gray-500">Based on 800 reviews</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specifications Section -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-6">Specifications</h2>
+            <div class="border rounded-lg overflow-hidden">
+                <table class="w-full text-sm specs-table">
+                    <tbody>
+                        <tr>
+                            <td class="specs-label">High-concerned chemical</td>
+                            <td>None</td>
+                            <td class="specs-label">Power Source</td>
+                            <td>Solar</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-label">Brand Name</td>
+                            <td>VEVOR</td>
+                            <td class="specs-label">Origin</td>
+                            <td>Mainland China</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-label">Certification</td>
+                            <td>CE, FCC, RoHS, WEEE</td>
+                            <td class="specs-label">Type</td>
+                            <td>Single Zone</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="p-4 text-center">
+                    <button class="text-sm font-bold border-2 border-black px-6 py-2 rounded-full hover:bg-gray-50 transition-colors">View more</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Description Section -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold mb-6">Description</h2>
+            <div class="prose max-w-none text-sm text-gray-600">
+                <p>This portable refrigerator is perfect for your outdoor camping needs. With a high-quality compressor, it provides rapid cooling and efficient power consumption. Durable wheels and a sturdy handle make it easy to transport anywhere.</p>
+            </div>
+        </section>
+
+        <!-- Store Info -->
+        <section class="mb-12 border rounded-xl p-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="https://flagcdn.com/w40/cn.png" class="w-12 h-12 rounded-full object-cover">
+                <div>
+                    <h3 class="font-bold">Appliance Mart Store <span class="text-blue-600 text-xs ml-2 cursor-pointer"><i class="fas fa-plus"></i> Follow</span></h3>
+                    <p class="text-xs text-gray-500">96.5% Positive feedback | 2k Followers</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button class="text-sm font-bold border-2 border-black px-6 py-2 rounded-full hover:bg-gray-50 transition-colors">+ Follow</button>
+                <button class="text-sm font-bold border-2 border-black px-6 py-2 rounded-full hover:bg-gray-50 transition-colors">Message</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#f2f2f2] pt-10 pb-6 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Help</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Help Center, Disputes & Reports, Buyer Protection, Report IPR infringement, Regulated Information, Integrity Compliance, Transparency Center, Submit report (non-registered users), Return Policy
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">AliExpress Multi-Language Sites</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Russian, Portuguese, Spanish, French, German, Italian, Dutch, Turkish, Japanese, Korean, Thai, Arabic, Hebrew, Polish
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Browse by Category</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        All Popular, Product, Promotion, Low Price, Great Value, Reviews, Wiki, Blog, Video
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Alibaba Group</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Alibaba Group Website, AliExpress, Alimama, Alipay, Fliggy, Alibaba Cloud, Alibaba International, AliTelecom, DingTalk, Juhuasuan, Taobao, Tmall, Taobao Global, AliOS, 1688
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-black text-white py-4 mt-10">
+            <div class="container mx-auto px-4 text-[10px] flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap gap-4">
+                    <a href="#" class="hover:underline">Intellectual Property Protection</a>
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Sitemap</a>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Information for EU consumers</a>
+                    <a href="#" class="hover:underline font-bold">Legal Information</a>
+                </div>
+                <div class="text-gray-400">
+                    © 2010-2025 AliExpress.com. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function updateLocation(flagCode, currency, countryName) {
+            localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
+            applyLocation();
+        }
+
+        function applyLocation() {
+            const location = JSON.parse(localStorage.getItem('selectedLocation')) || { flagCode: 'us', currency: 'USD', countryName: 'United States' };
+            
+            // Update Header
+            const currentFlag = document.getElementById('currentFlag');
+            if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', applyLocation);
+    </script>
+</body>
+</html>

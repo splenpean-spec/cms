@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress - Smarter Shopping, Better Living!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .aliexpress-red {
+            color: #FF4747;
+        }
+        .aliexpress-bg-red {
+            background-color: #FF4747;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-card:hover .cart-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cart-btn {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Top Header -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-6">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                <a href="index.html" class="block">
+                    <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-grow max-w-3xl">
+                <form action="search.html" method="GET" class="relative flex items-center">
+                    <input type="text" placeholder="Search items..." name="q" class="w-full border-2 border-black rounded-full py-2 px-6 focus:outline-none">
+                    <button type="submit" class="absolute right-2 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-search px-2"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Icons -->
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col items-center cursor-pointer group">
+                    <i class="fas fa-qrcode text-xl group-hover:aliexpress-red"></i>
+                    <span class="text-xs mt-1">Download App</span>
+                </div>
+                <!-- Location Selector -->
+                <div class="relative group" id="locationSelector">
+                    <div class="flex flex-col items-center cursor-pointer">
+                        <div class="flex items-center gap-1">
+                            <img id="currentFlag" src="https://flagcdn.com/w20/us.png" alt="US" class="w-5 h-3 object-cover">
+                            <span id="currentCurrency" class="text-xs font-medium">USD</span>
+                        </div>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 top-full pt-2 hidden group-hover:block z-[60]">
+                        <div class="bg-white border rounded-xl shadow-xl p-4 w-48">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">Ship to / Currency</p>
+                            <div class="space-y-2">
+                                <button onclick="updateLocation('us', 'USD', 'United States')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/us.png" class="w-5 h-3">
+                                    <span class="text-xs">United States / USD</span>
+                                </button>
+                                <button onclick="updateLocation('gb', 'USD', 'United Kingdom')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/gb.png" class="w-5 h-3">
+                                    <span class="text-xs">United Kingdom / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ng', 'USD', 'Nigeria')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ng.png" class="w-5 h-3">
+                                    <span class="text-xs">Nigeria / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ca', 'USD', 'Canada')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3">
+                                    <span class="text-xs">Canada / USD</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer group">
+                    <i class="far fa-user text-xl group-hover:aliexpress-red"></i>
+                    <span class="text-xs mt-1">Account</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer group relative">
+                    <i class="fas fa-shopping-cart text-xl group-hover:aliexpress-red"></i>
+                    <span class="text-xs mt-1">Cart</span>
+                    <span class="absolute -top-1 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Categories -->
+        <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
+                <a href="category.html" class="flex items-center gap-2 cursor-pointer bg-gray-100 px-4 py-1.5 rounded-full hover:bg-gray-200">
+                    <i class="fas fa-bars"></i>
+                    <span>All Categories</span>
+                </a>
+                <a href="category.html" class="text-red-500 font-bold border-b-2 border-red-500 pb-1">Bundle deals</a>
+                <a href="category.html" class="hover:text-red-500">Choice</a>
+                <a href="category.html" class="hover:text-red-500">Automotive</a>
+                <a href="category.html" class="hover:text-red-500">Appliances</a>
+                <a href="category.html" class="hover:text-red-500">Women's Clothing</a>
+                <a href="category.html" class="hover:text-red-500">Men's Clothing</a>
+                <a href="category.html" class="flex items-center gap-1 cursor-pointer hover:text-red-500">
+                    <span>More</span>
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <!-- Today's Deals Section -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-center mb-6">Today's deals</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Bestsellers -->
+                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Bestsellers</h3>
+                        <div class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>Top price & quality picks</span>
+                            <i class="fas fa-chevron-right text-[8px]"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_220x220.jpg" alt="Security Camera" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">eufy Security Indoor Cam...</span>
+                            <span class="text-red-600 font-bold">$84.63</span>
+                            <div class="flex items-center gap-1 mt-1">
+                                <i class="fas fa-star text-orange-400 text-[10px]"></i>
+                                <span class="text-[10px] text-gray-500 font-medium">4.7 1,000+ sold</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg_220x220.jpg" alt="Sneakers" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">HOBIBEAR Unisex Barefoot...</span>
+                            <span class="text-red-600 font-bold">$61.35</span>
+                            <div class="flex items-center gap-1 mt-1">
+                                <i class="fas fa-star text-orange-400 text-[10px]"></i>
+                                <span class="text-[10px] text-gray-500 font-medium">4.8 2,000+ sold</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SuperDeals -->
+                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">SuperDeals</h3>
+                        <div class="bg-pink-50 text-pink-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                            <i class="fas fa-clock"></i>
+                            <span>Up to 80% off</span>
+                            <i class="fas fa-chevron-right text-[8px]"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/Se29a44f77c8e42369680c8a51469e099V.jpg_220x220.jpg" alt="LCD Tablet" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">LCD Writing Tablet...</span>
+                            <span class="text-red-600 font-bold">$1.50</span>
+                            <span class="text-[10px] text-white bg-red-500 px-1 w-fit rounded">-81%</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg_220x220.jpg" alt="Fan" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">Multifunctional 3 in 1...</span>
+                            <span class="text-red-600 font-bold">$4.29</span>
+                            <span class="text-[10px] text-white bg-red-500 px-1 w-fit rounded">-80%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP BRAND -->
+                <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">TOP BRAND</h3>
+                        <div class="bg-red-50 text-red-600 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                            <i class="fas fa-tag"></i>
+                            <span>Limited-time discount</span>
+                            <i class="fas fa-chevron-right text-[8px]"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_220x220.jpg" alt="Heat Shrink" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">Heat Shrink Tubing Kit...</span>
+                            <span class="text-red-600 font-bold">$5.58</span>
+                            <span class="text-[10px] text-red-600 font-medium">You save $17.71</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_220x220.jpg" alt="Restorer" class="w-full aspect-square object-cover rounded-lg bg-gray-50 mb-2">
+                            <span class="text-xs text-gray-500 truncate">Car Plastic Restorer...</span>
+                            <span class="text-red-600 font-bold">$1.50</span>
+                            <span class="text-[10px] text-red-600 font-medium">You save $3.95</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- More to love Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-center mb-6">More to love</h2>
+            
+            <div id="dynamicProducts" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                <!-- Products will be loaded here via JS -->
+            </div>
+
+            <script>
+                async function loadProducts() {
+                    try {
+                        const res = await fetch('/api/products');
+                        const products = await res.json();
+                        const container = document.getElementById('dynamicProducts');
+                        
+                        if (products && products.length > 0) {
+                            container.innerHTML = products.map(p => `
+                                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                                    <a href="item.html?id=${p.id}" class="block flex flex-col flex-grow">
+                                        <div class="relative group">
+                                            <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover">
+                                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                                <i class="fas fa-shopping-cart text-xs"></i>
+                                            </div>
+                                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                                        </div>
+                                        <div class="p-3 flex flex-col flex-grow">
+                                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">${p.name}</h3>
+                                            <div class="flex items-center gap-1 mb-1">
+                                                <i class="fas fa-star text-black text-[8px]"></i>
+                                                <i class="fas fa-star text-black text-[8px]"></i>
+                                                <i class="fas fa-star text-black text-[8px]"></i>
+                                                <i class="fas fa-star text-black text-[8px]"></i>
+                                                <i class="fas fa-star text-black text-[8px]"></i>
+                                                <span class="text-[10px] text-gray-400 ml-1">${p.soldCount || '100'}+ sold</span>
+                                            </div>
+                                            <div class="mt-auto">
+                                                <div class="flex items-baseline gap-1">
+                                                     <span class="text-sm font-bold">$</span>
+                                                     <span class="text-xl font-bold">${p.price.toLocaleString()}</span>
+                                                 </div>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            `).join('');
+                        } else {
+                            container.style.display = 'none';
+                        }
+                    } catch (e) {
+                        console.log('Failed to load products from API, showing static content');
+                        const container = document.getElementById('dynamicProducts');
+                        if (container) container.style.display = 'none';
+                    }
+                }
+                loadProducts();
+            </script>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Product Card 1 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_350x350.jpg" alt="Headphones" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Bluetooth 5.3 Headsets Gaming Low Latency...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">10000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">1.50</span>
+                                    <span class="text-sm font-bold">.30</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-gray-400 line-through">$2.24</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg_350x350.jpg" alt="Fan" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">GAIATOP Mini USB Desktop Fan...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">5000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">1.50</span>
+                                    <span class="text-sm font-bold">.30</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-gray-400 line-through">$3.50</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_350x350.jpg" alt="Controller" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">CAMINJA P40 Wireless Gamepad...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star-half-alt text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">1000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">13.35</span>
+                                    <span class="text-sm font-bold">.70</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_350x350.jpg" alt="Case" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Aluminum Metal Frame Magnetic...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">2000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">6.14</span>
+                                    <span class="text-sm font-bold">.82</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-red-500 font-bold">- 49%</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 5 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/Se29a44f77c8e42369680c8a51469e099V.jpg_350x350.jpg" alt="Earbuds" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Original Lenovo XT88 TWS Wireless...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">10000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">2.54</span>
+                                    <span class="text-sm font-bold">.88</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-red-500 font-bold">- 49%</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg_350x350.jpg" alt="Smart Watch" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Smart Watch For Android iOS...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">4000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">1.50</span>
+                                    <span class="text-sm font-bold">.30</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-gray-400 line-through">$22.47</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 7 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg_350x350.jpg" alt="Shirt" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Spring and Summer Stand Collar...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">315 sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">9.80</span>
+                                    <span class="text-sm font-bold">.80</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-red-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 8 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_350x350.jpg" alt="Watch Strap" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">Stainless Steel Titanium Alloy...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">4000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">2.34</span>
+                                    <span class="text-sm font-bold">.25</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-orange-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 9 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_350x350.jpg" alt="Trimmer" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">T9 Vintage Men's Electric Hair...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">10000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">1.50</span>
+                                    <span class="text-sm font-bold">.30</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-orange-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product Card 10 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                    <a href="item.html" class="block flex flex-col flex-grow">
+                        <div class="relative group">
+                            <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_350x350.jpg" alt="Polo" class="w-full aspect-square object-cover">
+                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">New Men's Business Casual...</h3>
+                            <div class="flex items-center gap-1 mb-1">
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <i class="fas fa-star text-black text-[8px]"></i>
+                                <span class="text-[10px] text-gray-400 ml-1">5000+ sold</span>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-sm font-bold">$</span>
+                                    <span class="text-xl font-bold">1.50</span>
+                                    <span class="text-sm font-bold">.30</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                    <span class="text-[10px] text-orange-500 font-bold">Extra 1% off with coins</span>
+                                </div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                    <span class="text-[10px] text-orange-500">Free shipping over $10...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12 py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-10">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Customer service</h4>
+                    <ul class="text-xs space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:underline">Help Center</a></li>
+                        <li><a href="#" class="hover:underline">Transaction Services Agreement</a></li>
+                        <li><a href="#" class="hover:underline">Terms and Conditions</a></li>
+                        <li><a href="#" class="hover:underline">Take our feedback survey</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Shopping with us</h4>
+                    <ul class="text-xs space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:underline">Making payments</a></li>
+                        <li><a href="#" class="hover:underline">Delivery options</a></li>
+                        <li><a href="#" class="hover:underline">Buyer Protection</a></li>
+                    </ul>
+                    <h4 class="font-bold text-sm mt-6 mb-4">Collaborate with us</h4>
+                    <ul class="text-xs space-y-2 text-gray-600">
+                        <li><a href="#" class="hover:underline">Partnerships</a></li>
+                        <li><a href="#" class="hover:underline">Affiliate program</a></li>
+                        <li><a href="#" class="hover:underline">DS Center</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Pay with</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <i class="fab fa-cc-visa text-2xl text-gray-400"></i>
+                        <i class="fab fa-cc-mastercard text-2xl text-gray-400"></i>
+                        <i class="fab fa-cc-apple-pay text-2xl text-gray-400"></i>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Stay connected</h4>
+                    <div class="flex gap-4 text-xl text-gray-600">
+                        <i class="fab fa-facebook hover:text-blue-600 cursor-pointer"></i>
+                        <i class="fab fa-twitter hover:text-blue-400 cursor-pointer"></i>
+                        <i class="fab fa-instagram hover:text-pink-600 cursor-pointer"></i>
+                        <i class="fab fa-whatsapp hover:text-green-500 cursor-pointer"></i>
+                    </div>
+                </div>
+                <div class="col-span-2 lg:col-span-1">
+                    <h4 class="font-bold text-sm mb-4">AliExpress Multi-Language Sites</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Russian, Portuguese, Spanish, French, German, Italian, Dutch, Turkish, Japanese, Korean, Thai, Arabic, Hebrew, Polish
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Help</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Help Center, Disputes & Reports, Buyer Protection, Report IPR infringement, Regulated Information, Integrity Compliance, Transparency Center, Submit report (non-registered users), Return Policy
+                    </p>
+                    <h4 class="font-bold text-sm mt-6 mb-4">Browse by Category</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        All Popular, Product, Promotion, Low Price, Great Value, Reviews, Wiki, Blog, Video
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Alibaba Group</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Alibaba Group Website, AliExpress, Alimama, Alipay, Fliggy, Alibaba Cloud, Alibaba International, AliTelecom, DingTalk, Juhuasuan, Taobao, Tmall, Taobao Global, AliOS, 1688
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-black text-white py-4 mt-10">
+            <div class="container mx-auto px-4 text-[10px] flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap gap-4">
+                    <a href="#" class="hover:underline">Intellectual Property Protection</a>
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Sitemap</a>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Information for EU consumers</a>
+                    <a href="#" class="hover:underline font-bold">Legal Information</a>
+                </div>
+                <div class="text-gray-400">
+                    © 2010-2025 AliExpress.com. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div class="fixed bottom-10 right-6 flex flex-col gap-3">
+        <button class="bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            <i class="far fa-comment-dots text-xl"></i>
+        </button>
+        <button class="bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            <i class="fas fa-pencil-alt text-xl"></i>
+        </button>
+    </div>
+    <script>
+        function updateLocation(flagCode, currency, countryName) {
+            localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
+            applyLocation();
+        }
+
+        function applyLocation() {
+            const location = JSON.parse(localStorage.getItem('selectedLocation')) || { flagCode: 'us', currency: 'USD', countryName: 'United States' };
+            
+            // Update Header
+            const currentFlag = document.getElementById('currentFlag');
+            const currentCurrency = document.getElementById('currentCurrency');
+            if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+            if (currentCurrency) currentCurrency.textContent = location.currency;
+
+            // Update all static currency displays
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = '$');
+            document.querySelectorAll('.currency-code').forEach(el => el.textContent = location.currency);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', applyLocation);
+    </script>
+</body>
+</html>

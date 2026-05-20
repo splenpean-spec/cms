@@ -1,0 +1,155 @@
+require('dotenv').config();
+const express = require('express');
+const { Sequelize, DataTypes } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '/')));
+
+// Database setup (SQLite)
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: './database.sqlite',
+    logging: false
+});
+
+// Models
+const User = sequelize.define('User', {
+    username: { type: DataTypes.STRING, unique: true, allowNull: false },
+    password: { type: DataTypes.STRING, allowNull: false }
+});
+
+const Product = sequelize.define('Product', {
+    name: { type: DataTypes.STRING, allowNull: false },
+    price: { type: DataTypes.FLOAT, allowNull: false },
+    image: { type: DataTypes.STRING },
+    category: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT },
+    soldCount: { type: DataTypes.INTEGER, defaultValue: 0 }
+});
+
+const Order = sequelize.define('Order', {
+    customerName: { type: DataTypes.STRING },
+    totalAmount: { type: DataTypes.FLOAT },
+    paymentMethod: { type: DataTypes.STRING },
+    status: { type: DataTypes.STRING, defaultValue: 'Pending' },
+    items: { type: DataTypes.TEXT } // Simplified: JSON string of items
+});
+
+// Auth Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
+
+// Routes - Auth
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await User.findOne({ where: { username } });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) return res.status(401).json({ message: 'Invalid password' });
+
+        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        res.json({ token });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Routes - Products (Public Read)
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.findAll();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Routes - Products (Admin CRUD)
+app.post('/api/products', authenticateToken, async (req, res) => {
+    try {
+        const product = await Product.create(req.body);
+        res.status(201).json(product);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.put('/api/products/:id', authenticateToken, async (req, res) => {
+    try {
+        const product = await Product.findByPk(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        await product.update(req.body);
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.delete('/api/products/:id', authenticateToken, async (req, res) => {
+    try {
+        const product = await Product.findByPk(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        await product.destroy();
+        res.json({ message: 'Product deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Routes - Orders
+app.post('/api/orders', async (req, res) => {
+    try {
+        const order = await Order.create(req.body);
+        res.status(201).json(order);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+app.get('/api/orders', authenticateToken, async (req, res) => {
+    try {
+        const orders = await Order.findAll();
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Database Sync and Server Start
+sequelize.sync().then(async () => {
+    console.log('Database synced');
+    
+    // Create default admin if not exists
+    const adminExists = await User.findOne({ where: { username: 'admin' } });
+    if (!adminExists) {
+        const hashedPassword = await bcrypt.hash('admin123', 10);
+        await User.create({ username: 'admin', password: hashedPassword });
+        console.log('Default admin created: admin / admin123');
+    }
+
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+    });
+});

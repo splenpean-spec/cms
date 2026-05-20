@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress - Search Results for Refrigerators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+        }
+        .aliexpress-red {
+            color: #FF4747;
+        }
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 10px;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .custom-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-6">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                <a href="index.html" class="block">
+                    <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-grow max-w-2xl">
+                <form action="search.html" method="GET" class="relative flex items-center">
+                    <input type="text" value="refrigerator car and house" name="q" class="w-full border border-gray-300 rounded-full py-1.5 px-6 focus:outline-none text-sm">
+                    <div class="absolute right-3 flex items-center gap-3 text-gray-400">
+                        <i class="fas fa-camera cursor-pointer hover:text-gray-600"></i>
+                        <div class="w-[1px] h-4 bg-gray-200"></div>
+                        <button type="submit">
+                            <i class="fas fa-search cursor-pointer hover:text-gray-600"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Icons -->
+            <div class="flex items-center gap-6 text-gray-600">
+                <i class="fas fa-th-large text-xl cursor-pointer"></i>
+                <!-- Location Selector -->
+                <div class="relative group" id="locationSelector">
+                    <div class="flex flex-col items-center cursor-pointer">
+                        <div class="flex items-center gap-1">
+                            <img id="currentFlag" src="https://flagcdn.com/w20/us.png" alt="US" class="w-5 h-3 object-cover">
+                        </div>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 top-full pt-2 hidden group-hover:block z-[60]">
+                        <div class="bg-white border rounded-xl shadow-xl p-4 w-48 text-gray-800">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">Ship to / Currency</p>
+                            <div class="space-y-2">
+                                <button onclick="updateLocation('us', 'USD', 'United States')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/us.png" class="w-5 h-3">
+                                    <span class="text-xs">United States / USD</span>
+                                </button>
+                                <button onclick="updateLocation('gb', 'USD', 'United Kingdom')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/gb.png" class="w-5 h-3">
+                                    <span class="text-xs">United Kingdom / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ng', 'USD', 'Nigeria')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ng.png" class="w-5 h-3">
+                                    <span class="text-xs">Nigeria / USD</span>
+                                </button>
+                                <button onclick="updateLocation('ca', 'USD', 'Canada')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3">
+                                    <span class="text-xs">Canada / USD</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i class="far fa-user text-xl cursor-pointer"></i>
+                <div class="relative cursor-pointer">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 flex gap-8 py-6">
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 sidebar-scroll overflow-y-auto h-[calc(100vh-100px)] sticky top-20">
+            <div class="space-y-6">
+                <!-- Stock & discounts -->
+                <div>
+                    <h3 class="font-bold text-sm mb-3">Stock & discounts</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Free shipping</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">SuperDeals</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Delivery & service -->
+                <div>
+                    <h3 class="font-bold text-sm mb-3">Delivery & service</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Choice</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Quality & trust -->
+                <div>
+                    <h3 class="font-bold text-sm mb-3">Quality & trust</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">4 stars & up</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Premium Quality</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Color -->
+                <div>
+                    <h3 class="font-bold text-sm mb-3 flex items-center justify-between">
+                        Color
+                        <i class="fas fa-chevron-up text-[10px] text-gray-400"></i>
+                    </h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">All</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">White</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Silver</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Black</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Grey</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Red</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Pink</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" class="hidden peer">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-xs text-gray-600 group-hover:text-black">Blue</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow">
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_350x350.jpg" alt="Portable Car Fridge" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">4L/6L/8L Portable Car Fridge Cooler Warmer For Truck...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">330.83</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">100+ sold</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-2">
+                                <span class="text-[10px] text-white bg-blue-600 px-1 rounded">Choice</span>
+                                <span class="text-[10px] text-orange-500 font-medium">Free shipping</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_350x350.jpg" alt="Car Refrigerator" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">Compressor Car Refrigerator 12V 24V Portable...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">123.23</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">500+ sold</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-2">
+                                <span class="text-[10px] text-white bg-orange-500 px-1 rounded">Choice</span>
+                                <span class="text-[10px] text-pink-600 font-medium">Welcome deal</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_350x350.jpg" alt="Mini Fridge" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">Cooling Small Refrigerator Freezer Mini Car...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">215.08</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">20+ sold</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/Se29a44f77c8e42369680c8a51469e099V.jpg_350x350.jpg" alt="Car Cooler" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">Portable Car Cooler Box Mini Refrigerator...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">123.23</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">100+ sold</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg_350x350.jpg" alt="Wine Cooler" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">High-end LED Bottle Cooler Cellar Fridge...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">1,342.55</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">5+ sold</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                    <a href="item.html" class="block">
+                        <div class="relative">
+                            <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg_350x350.jpg" alt="Skin Care Fridge" class="w-full aspect-square object-cover">
+                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-shopping-cart text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">Skin Care Fridge Mini Beauty Refrigerator...</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-[10px] font-bold">$</span>
+                                <span class="text-lg font-bold">521.25</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                </div>
+                                <span class="text-[10px] text-gray-400">50+ sold</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#f2f2f2] pt-10 pb-6 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Help</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Help Center, Disputes & Reports, Buyer Protection, Report IPR infringement, Regulated Information, Integrity Compliance, Transparency Center, Submit report (non-registered users), Return Policy
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">AliExpress Multi-Language Sites</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Russian, Portuguese, Spanish, French, German, Italian, Dutch, Turkish, Japanese, Korean, Thai, Arabic, Hebrew, Polish
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Browse by Category</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        All Popular, Product, Promotion, Low Price, Great Value, Reviews, Wiki, Blog, Video
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-4">Alibaba Group</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        Alibaba Group Website, AliExpress, Alimama, Alipay, Fliggy, Alibaba Cloud, Alibaba International, AliTelecom, DingTalk, Juhuasuan, Taobao, Tmall, Taobao Global, AliOS, 1688
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-black text-white py-4 mt-10">
+            <div class="container mx-auto px-4 text-[10px] flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap gap-4">
+                    <a href="#" class="hover:underline">Intellectual Property Protection</a>
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Sitemap</a>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Information for EU consumers</a>
+                    <a href="#" class="hover:underline font-bold">Legal Information</a>
+                </div>
+                <div class="text-gray-400">
+                    © 2010-2025 AliExpress.com. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Social Side Bar (as seen in image) -->
+    <div class="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
+        <div class="bg-[#3b5998] w-8 h-8 flex items-center justify-center text-white cursor-pointer rounded-sm hover:opacity-80">
+            <i class="fab fa-facebook-f text-sm"></i>
+        </div>
+        <div class="bg-[#bd081c] w-8 h-8 flex items-center justify-center text-white cursor-pointer rounded-sm hover:opacity-80">
+            <i class="fab fa-pinterest-p text-sm"></i>
+        </div>
+        <div class="bg-[#55acee] w-8 h-8 flex items-center justify-center text-white cursor-pointer rounded-sm hover:opacity-80">
+            <i class="fab fa-twitter text-sm"></i>
+        </div>
+        <div class="bg-[#999999] w-8 h-8 flex items-center justify-center text-white cursor-pointer rounded-sm hover:opacity-80">
+            <i class="fas fa-share-alt text-sm"></i>
+        </div>
+    </div>
+    <script>
+        function updateLocation(flagCode, currency, countryName) {
+            localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
+            applyLocation();
+        }
+
+        function applyLocation() {
+            const location = JSON.parse(localStorage.getItem('selectedLocation')) || { flagCode: 'us', currency: 'USD', countryName: 'United States' };
+            
+            // Update Header
+            const currentFlag = document.getElementById('currentFlag');
+            if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', applyLocation);
+    </script>
+</body>
+</html>
