@@ -204,7 +204,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Portable Mini Refrigerator 4L Car Fridge Cooler Warmer",
                         price: 35.99,
-                        image: "https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg",
                         category: "appliances",
                         description: "Compact 4-liter mini fridge, perfect for cars, offices, and dorms. Features both cooling and warming functions. Eco-friendly and quiet operation.",
                         quantity: 150,
@@ -213,7 +213,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Xiaomi Mijia Robot Vacuum Mop 3C Enhanced Edition",
                         price: 189.50,
-                        image: "https://ae01.alicdn.com/kf/S7e19395f87744383a8f5984407987e38N.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S7e19395f87744383a8f5984407987e38N.jpg",
                         category: "appliances",
                         description: "LDS Laser Navigation, 5000Pa Suction Power, Smart App Control. Efficiently cleans every corner of your home.",
                         quantity: 45,
@@ -223,7 +223,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Universal Car Seat Cover Set Breathable Leather",
                         price: 45.20,
-                        image: "https://ae01.alicdn.com/kf/S0c86311654e549118086a44f45447a16E.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S0c86311654e549118086a44f45447a16E.jpg",
                         category: "automotive",
                         description: "High-quality PU leather seat covers, waterproof and easy to clean. Fits most sedan and SUV models.",
                         quantity: 80,
@@ -232,7 +232,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "12V 150PSI Portable Car Air Compressor Tire Inflator",
                         price: 28.15,
-                        image: "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg",
                         category: "automotive",
                         description: "Digital display tire inflator with auto-shutoff. Includes LED light for emergency use.",
                         quantity: 200,
@@ -242,7 +242,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Men's Lightweight Waterproof Windbreaker Jacket",
                         price: 19.99,
-                        image: "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg",
                         category: "clothing",
                         description: "Outdoor sports jacket for hiking, camping, and daily wear. Breathable and quick-dry material.",
                         quantity: 300,
@@ -251,7 +251,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Women's High Waist Seamless Yoga Pants Leggings",
                         price: 12.45,
-                        image: "https://ae01.alicdn.com/kf/S1b0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg",
                         category: "clothing",
                         description: "Stretchy and squat-proof fitness leggings. Perfect for gym, yoga, and casual wear.",
                         quantity: 500,
@@ -261,7 +261,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "TWS Wireless Bluetooth Earbuds with Charging Case",
                         price: 9.90,
-                        image: "https://ae01.alicdn.com/kf/S8f1037f0048e4b779e56475f6e804a604.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg",
                         category: "deals",
                         description: "HiFi Stereo Sound, Bluetooth 5.3, Long Battery Life. Compatible with iOS and Android.",
                         quantity: 1000,
@@ -270,7 +270,7 @@ sequelize.sync({ alter: true })
                     {
                         name: "Smart Watch Ultra Series 8 NFC GPS Tracker",
                         price: 24.80,
-                        image: "https://ae01.alicdn.com/kf/S4c89f7f4585c4909a39f5062a45447a16E.jpg_640x640.jpg",
+                        image: "https://ae01.alicdn.com/kf/S4c89f7f4585c4909a39f5062a45447a16E.jpg",
                         category: "deals",
                         description: "Fitness tracker with heart rate monitor, sleep tracking, and Bluetooth calling. IP68 waterproof.",
                         quantity: 150,

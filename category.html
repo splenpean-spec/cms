@@ -287,7 +287,7 @@
                                 <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
                                     <a href="item.html?id=${p.id}" class="block">
                                         <div class="relative">
-                                            <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover">
+                                            <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover" onerror="this.src='https://via.placeholder.com/350x350?text=Product+Image'">
                                             <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
                                                 <i class="fas fa-shopping-cart text-xs"></i>
                                             </div>

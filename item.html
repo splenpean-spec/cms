@@ -439,7 +439,9 @@
                 document.title = `AliExpress - ${p.name}`;
                 document.getElementById('productName').textContent = p.name;
                 document.getElementById('productPrice').textContent = `$${p.price.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-                document.getElementById('productImage').src = p.image;
+                const mainImg = document.getElementById('productImage');
+                mainImg.src = p.image;
+                mainImg.onerror = () => mainImg.src = 'https://via.placeholder.com/640x640?text=Product+Image';
                 document.getElementById('productDescription').textContent = p.description || 'No description available.';
                 document.getElementById('stockStatus').textContent = `${p.quantity} available`;
                 document.getElementById('stockStatus').className = `text-[10px] ${p.quantity > 0 ? 'text-gray-500' : 'text-red-500 font-bold'}`;
