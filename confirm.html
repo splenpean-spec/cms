@@ -178,7 +178,6 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-bold text-sm">Order confirmation</h3>
-                        <p onclick="openRefundModal()" class="text-[10px] text-red-600 flex items-center gap-1 cursor-pointer hover:underline"><i class="fas fa-shield-alt"></i> Refund if package lost <i class="fas fa-chevron-right text-[8px]"></i></p>
                     </div>
                     <div id="checkoutItemsList" class="space-y-6">
                         <!-- Dynamic Cart Items will be injected here -->
@@ -631,12 +630,8 @@
               </button>
 
               <div class="text-center mb-8">
-                  <div class="flex items-center justify-center gap-2 mb-2">
-                      <i class="fas fa-link text-red-500 text-xs"></i>
-                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Bitget Payment Gateway</span>
-                  </div>
                   <h2 class="text-xl font-bold mb-2">Send <span id="cryptoName">USDT</span> Payment</h2>
-                  <p class="text-xs text-gray-500">Secure blockchain transaction powered by Bitget</p>
+                  <p class="text-xs text-gray-500">Secure blockchain transaction</p>
               </div>
 
               <div class="flex justify-center mb-8">
@@ -674,7 +669,7 @@
 
                   <div class="pt-4">
                       <button id="paidBtn" class="w-full bg-[#FF4747] text-white font-bold py-4 rounded-full text-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
-                          <i class="fas fa-shield-alt"></i> Proceed via Bitget Secure
+                          <i class="fas fa-shield-alt"></i> Proceed to Payment
                       </button>
                       <div class="flex items-center justify-center gap-4 mt-6">
                           <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 grayscale opacity-30">
@@ -682,7 +677,7 @@
                           <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Ethereum_Classic_Logo.svg" class="h-4 grayscale opacity-30">
                       </div>
                       <p class="text-center text-[10px] text-gray-400 mt-4">
-                          Transactions are monitored and secured by Bitget Protection
+                          Transactions are monitored and secured by Protection
                       </p>
                   </div>
               </div>
@@ -1131,16 +1126,16 @@
             });
         });
 
-        // Paid button interaction (Bitget Gateway)
+        // Paid button interaction
         paidBtn.addEventListener('click', () => {
-            paidBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting to Bitget...';
+            paidBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
             paidBtn.style.pointerEvents = 'none';
             paidBtn.style.opacity = '0.7';
 
             setTimeout(() => {
-                alert('Your Bitget payment request has been initialized. Once the transaction is detected on the blockchain, your order will be marked as paid automatically.');
+                alert('Your payment request has been initialized. Once the transaction is detected on the blockchain, your order will be marked as paid automatically.');
                 closeCryptoModal();
-                paidBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Proceed via Bitget Secure';
+                paidBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Proceed to Payment';
                 paidBtn.style.pointerEvents = 'auto';
                 paidBtn.style.opacity = '1';
             }, 1500);
