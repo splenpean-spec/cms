@@ -154,8 +154,9 @@
                         </div>
                     </div>
                 <div>
-                    <label class="block text-sm font-bold mb-1">Image URL</label>
-                    <input type="text" id="image" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                    <label class="block text-sm font-bold mb-1">Product Image</label>
+                    <input type="file" id="image" accept="image/*" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                    <p id="imageStatus" class="text-[10px] text-gray-400 mt-1 italic"></p>
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-1">Available Colors (comma separated)</label>
@@ -253,7 +254,8 @@
             document.getElementById('price').value = p ? p.price : '';
             document.getElementById('quantity').value = p ? p.quantity : '0';
             document.getElementById('category').value = p ? p.category : '';
-            document.getElementById('image').value = p ? p.image : '';
+            document.getElementById('image').value = '';
+            document.getElementById('imageStatus').textContent = p ? 'Keep empty to maintain current image' : '';
             document.getElementById('colors').value = p ? (p.colors || '') : '';
             document.getElementById('description').value = p ? p.description : '';
         }
@@ -265,15 +267,19 @@
         document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('productId').value;
-            const data = {
-                name: document.getElementById('name').value,
-                price: parseFloat(document.getElementById('price').value),
-                quantity: parseInt(document.getElementById('quantity').value),
-                category: document.getElementById('category').value,
-                image: document.getElementById('image').value,
-                colors: document.getElementById('colors').value,
-                description: document.getElementById('description').value
-            };
+            const formData = new FormData();
+            
+            formData.append('name', document.getElementById('name').value);
+            formData.append('price', document.getElementById('price').value);
+            formData.append('quantity', document.getElementById('quantity').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('colors', document.getElementById('colors').value);
+            formData.append('description', document.getElementById('description').value);
+            
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
 
             const method = id ? 'PUT' : 'POST';
             const url = id ? `/api/products/${id}` : '/api/products';
@@ -281,10 +287,9 @@
             const res = await fetch(url, {
                 method,
                 headers: { 
-                    'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token 
                 },
-                body: JSON.stringify(data)
+                body: formData
             });
 
             if (res.ok) {

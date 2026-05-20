@@ -6,15 +6,35 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'aliexpress_clone_fallback_secret_2026';
 
+// Create uploads directory if not exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database setup (SQLite)
 const sequelize = new Sequelize({
@@ -128,20 +148,38 @@ app.get('/api/products/:id', async (req, res) => {
 });
 
 // Routes - Products (Admin CRUD)
-app.post('/api/products', authenticateToken, async (req, res) => {
+app.post('/api/products', authenticateToken, upload.single('image'), async (req, res) => {
     try {
-        const product = await Product.create(req.body);
+        const { price, quantity, soldCount } = req.body;
+        const productData = {
+            ...req.body,
+            price: price ? parseFloat(price) : 0,
+            quantity: quantity ? parseInt(quantity) : 0,
+            soldCount: soldCount ? parseInt(soldCount) : 0,
+            image: req.file ? `/uploads/${req.file.filename}` : req.body.image
+        };
+        const product = await Product.create(productData);
         res.status(201).json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
 
-app.put('/api/products/:id', authenticateToken, async (req, res) => {
+app.put('/api/products/:id', authenticateToken, upload.single('image'), async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
-        await product.update(req.body);
+        
+        const { price, quantity, soldCount } = req.body;
+        const updateData = {
+            ...req.body,
+            price: price ? parseFloat(price) : product.price,
+            quantity: quantity ? parseInt(quantity) : product.quantity,
+            soldCount: soldCount ? parseInt(soldCount) : product.soldCount,
+            image: req.file ? `/uploads/${req.file.filename}` : product.image
+        };
+        
+        await product.update(updateData);
         res.json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
