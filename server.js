@@ -9,6 +9,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'aliexpress_clone_fallback_secret_2026';
 
 // Middleware
 app.use(cors());
@@ -52,7 +53,7 @@ const authenticateToken = (req, res, next) => {
 
     if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
         next();
@@ -62,16 +63,25 @@ const authenticateToken = (req, res, next) => {
 // Routes - Auth
 app.post('/api/auth/login', async (req, res) => {
     const { username, password } = req.body;
+    console.log(`Login attempt for username: ${username}`);
     try {
         const user = await User.findOne({ where: { username } });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return res.status(401).json({ message: 'Invalid password' });
+        if (!validPassword) {
+            console.log('Invalid password');
+            return res.status(401).json({ message: 'Invalid password' });
+        }
 
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '24h' });
+        console.log('Login successful, token generated');
         res.json({ token });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -137,19 +147,37 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
     }
 });
 
-// Database Sync and Server Start
-sequelize.sync().then(async () => {
-    console.log('Database synced');
-    
-    // Create default admin if not exists
-    const adminExists = await User.findOne({ where: { username: 'admin' } });
-    if (!adminExists) {
-        const hashedPassword = await bcrypt.hash('admin123', 10);
-        await User.create({ username: 'admin', password: hashedPassword });
-        console.log('Default admin created: admin / admin123');
-    }
+// Health check
+app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 
-    app.listen(PORT, () => {
-        console.log(`Server running at http://localhost:${PORT}`);
+// Database Sync and Server Start
+console.log('Starting database sync...');
+sequelize.sync()
+    .then(async () => {
+        console.log('Database synced successfully');
+        
+        try {
+            // Create default admin if not exists
+            const adminExists = await User.findOne({ where: { username: 'admin' } });
+            if (!adminExists) {
+                const hashedPassword = await bcrypt.hash('admin123', 10);
+                await User.create({ username: 'admin', password: hashedPassword });
+                console.log('Default admin created: admin / admin123');
+            } else {
+                console.log('Admin user already exists');
+            }
+        } catch (adminError) {
+            console.error('Error checking/creating admin user:', adminError);
+        }
+
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('Failed to sync database:', err);
+        // Still start the server so we can at least see static pages and errors
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server started with DB error on port ${PORT}`);
+        });
     });
-});

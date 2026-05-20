@@ -50,7 +50,15 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await response.json();
+                let data;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned an unexpected response');
+                }
 
                 if (response.ok) {
                     localStorage.setItem('adminToken', data.token);
@@ -62,8 +70,11 @@
                     messageEl.textContent = data.message || 'Login failed';
                 }
             } catch (error) {
+                console.error('Login fetch error:', error);
                 messageEl.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                messageEl.textContent = 'Connection error. Make sure the server is running.';
+                messageEl.textContent = error.message === 'Server returned an unexpected response' 
+                    ? 'Server error. Please check the backend logs.' 
+                    : 'Connection error. Make sure the server is running.';
             }
         });
     </script>
