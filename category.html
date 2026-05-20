@@ -296,7 +296,7 @@
                                             <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">${p.name}</h3>
                                             <div class="flex items-baseline gap-1">
                                                 <span class="text-[10px] font-bold">$</span>
-                                                <span class="text-lg font-bold">${p.price.toLocaleString()}</span>
+                                                <span class="text-lg font-bold">${p.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                                             </div>
                                             <div class="mt-1 text-[10px] ${p.quantity > 0 ? 'text-green-600' : 'text-red-600'} font-bold">
                                                 ${p.quantity > 0 ? `${p.quantity} in stock` : 'Out of stock'}
