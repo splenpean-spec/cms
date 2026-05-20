@@ -12,54 +12,68 @@
         .aliexpress-red { color: #FF4747; }
         .aliexpress-bg-red { background-color: #FF4747; }
         .sidebar-link.active { background-color: #fff1f1; color: #FF4747; border-right: 4px solid #FF4747; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.active { transform: translateX(0); }
+        }
     </style>
 </head>
-<body class="flex min-h-screen">
+<body class="flex min-h-screen relative">
+    <!-- Mobile Menu Toggle -->
+    <button onclick="toggleSidebar()" class="md:hidden fixed bottom-6 right-6 z-[100] bg-black text-white p-4 rounded-full shadow-2xl">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r shadow-sm">
-        <div class="p-6">
-            <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress Admin</h1>
+    <aside id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 w-64 bg-white border-r shadow-sm z-50">
+        <div class="p-6 flex items-center justify-between">
+            <h1 class="text-xl md:text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress Admin</h1>
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-400">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <nav class="mt-6">
             <button onclick="showTab('products')" id="productsTab" class="sidebar-link w-full flex items-center gap-4 px-6 py-4 text-gray-600 hover:bg-gray-50 transition-all active">
                 <i class="fas fa-box"></i>
-                <span class="font-bold">Products</span>
+                <span class="font-bold text-sm">Products</span>
             </button>
             <button onclick="showTab('orders')" id="ordersTab" class="sidebar-link w-full flex items-center gap-4 px-6 py-4 text-gray-600 hover:bg-gray-50 transition-all">
                 <i class="fas fa-shopping-bag"></i>
-                <span class="font-bold">Orders</span>
+                <span class="font-bold text-sm">Orders</span>
             </button>
             <button onclick="showTab('settings')" id="settingsTab" class="sidebar-link w-full flex items-center gap-4 px-6 py-4 text-gray-600 hover:bg-gray-50 transition-all">
                 <i class="fas fa-cog"></i>
-                <span class="font-bold">Settings</span>
+                <span class="font-bold text-sm">Settings</span>
             </button>
-            <button onclick="logout()" class="w-full flex items-center gap-4 px-6 py-4 text-red-500 hover:bg-red-50 mt-auto transition-all">
-                <i class="fas fa-sign-out-alt"></i>
-                <span class="font-bold">Logout</span>
-            </button>
+            <div class="px-6 py-8 mt-auto">
+                <button onclick="logout()" class="w-full flex items-center gap-4 text-red-500 hover:text-red-700 transition-all">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="font-bold text-sm">Logout</span>
+                </button>
+            </div>
         </nav>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-grow p-8">
-        <header class="flex justify-between items-center mb-8">
-            <h2 id="tabTitle" class="text-2xl font-bold text-gray-800">Manage Products</h2>
-            <button id="addBtn" onclick="openProductModal()" class="aliexpress-bg-red text-white px-6 py-2 rounded-xl font-bold shadow-lg hover:bg-red-600 transition-all">
+    <main class="flex-grow p-4 md:p-8">
+        <header class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <h2 id="tabTitle" class="text-xl md:text-2xl font-bold text-gray-800">Manage Products</h2>
+            <button id="addBtn" onclick="openProductModal()" class="aliexpress-bg-red text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-red-600 transition-all w-full md:w-auto text-sm">
                 <i class="fas fa-plus mr-2"></i> Add New Product
             </button>
         </header>
 
         <!-- Products Table -->
-        <div id="productsView" class="bg-white rounded-2xl shadow-sm border overflow-hidden">
-            <table class="w-full text-left">
+        <div id="productsView" class="bg-white rounded-2xl shadow-sm border overflow-x-auto">
+            <table class="w-full text-left min-w-[800px]">
                 <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Image</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Name</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Price</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Quantity</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Category</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Actions</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Image</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Name</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Price</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Quantity</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Category</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="productsList">
@@ -69,15 +83,15 @@
         </div>
 
         <!-- Orders Table (Hidden by default) -->
-        <div id="ordersView" class="hidden bg-white rounded-2xl shadow-sm border overflow-hidden">
-            <table class="w-full text-left">
+        <div id="ordersView" class="hidden bg-white rounded-2xl shadow-sm border overflow-x-auto">
+            <table class="w-full text-left min-w-[800px]">
                 <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Order ID</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Customer</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Total</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Status</th>
-                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Date</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Order ID</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Customer</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Total</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Status</th>
+                        <th class="px-6 py-4 font-bold text-xs text-gray-500">Date</th>
                     </tr>
                 </thead>
                 <tbody id="ordersList">
@@ -158,7 +172,12 @@
         const token = localStorage.getItem('adminToken');
         if (!token) window.location.href = 'admin-login.html';
 
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
         function showTab(tab) {
+            if (window.innerWidth < 768) toggleSidebar();
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tab + 'Tab').classList.add('active');
             

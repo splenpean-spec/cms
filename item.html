@@ -34,15 +34,19 @@
 <body class="text-gray-800">
     <!-- Header -->
     <header class="bg-white border-b sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-6">
+        <!-- Main Header Row -->
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4 md:gap-6">
+            <!-- Logo -->
             <div class="flex-shrink-0">
                 <a href="index.html" class="block">
-                    <h1 class="text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
+                    <h1 class="text-xl md:text-2xl font-bold italic tracking-tighter aliexpress-red">AliExpress</h1>
                 </a>
             </div>
-            <div class="flex-grow max-w-2xl">
-                <form action="search.html" method="GET" class="relative flex items-center">
-                    <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border border-gray-300 rounded-full py-1.5 px-6 focus:outline-none text-sm">
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-grow max-w-2xl">
+                <form action="search.html" method="GET" class="relative flex items-center w-full">
+                    <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border-2 border-black rounded-full py-2 px-6 focus:outline-none text-sm">
                     <div class="absolute right-3 flex items-center gap-3 text-gray-400">
                         <i class="fas fa-camera cursor-pointer hover:text-gray-600"></i>
                         <div class="w-[1px] h-4 bg-gray-200"></div>
@@ -52,8 +56,10 @@
                     </div>
                 </form>
             </div>
-            <div class="flex items-center gap-6 text-gray-600 text-sm">
-                <i class="fas fa-qrcode text-xl"></i>
+
+            <!-- Icons -->
+            <div class="flex items-center gap-4 md:gap-6 text-gray-600 text-sm">
+                <i class="hidden lg:block fas fa-qrcode text-xl"></i>
                 <!-- Location Selector -->
                 <div class="relative group" id="locationSelector">
                     <div class="flex flex-col items-center cursor-pointer">
@@ -95,21 +101,33 @@
                 </div>
             </div>
         </div>
+
+        <!-- Search Bar (Mobile) -->
+        <div class="md:hidden px-4 pb-3">
+            <form action="search.html" method="GET" class="relative flex items-center w-full">
+                <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border-2 border-gray-100 bg-gray-50 rounded-full py-2 px-6 focus:outline-none text-sm transition-colors focus:border-black">
+                <button type="submit" class="absolute right-4 text-gray-400">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6">
+    <main class="container mx-auto px-4 py-4 md:py-6">
         <!-- Product Section -->
-        <div class="flex flex-col lg:flex-row gap-8">
+        <div class="flex flex-col lg:flex-row gap-6 md:gap-8">
             <!-- Left: Images -->
-            <div class="w-full lg:w-1/2 flex gap-4">
-                <div class="flex flex-col gap-2 w-16">
-                    <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
-                    <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
-                    <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_100x100.jpg" class="w-full border border-gray-200 rounded cursor-pointer">
+            <div class="w-full lg:w-1/2 flex flex-col-reverse md:flex-row gap-4">
+                <!-- Thumbnails -->
+                <div class="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-y-auto md:w-16 scrollbar-hide">
+                    <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
+                    <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
+                    <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg_100x100.jpg" class="w-16 h-16 md:w-full border border-gray-200 rounded cursor-pointer flex-shrink-0 object-cover">
                 </div>
+                <!-- Main Image -->
                 <div class="flex-grow">
-                    <div class="relative group">
-                        <img id="productImage" src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg" class="w-full rounded-lg">
+                    <div class="relative group aspect-square overflow-hidden bg-gray-50 rounded-lg">
+                        <img id="productImage" src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg" class="w-full h-full object-contain">
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/50 rounded-full flex items-center justify-center cursor-pointer">
                             <i class="fas fa-play text-black ml-1"></i>
                         </div>
@@ -118,10 +136,10 @@
             </div>
 
             <!-- Middle: Product Info -->
-            <div class="w-full lg:w-1/3">
-                <h1 id="productName" class="text-xl font-medium mb-4 leading-tight">Outdoor 30L, 40L Portable Camping Cooler Compressor Cooling Freezer 12V/24V Home Small Refrigerator Car Fridges with Wheels</h1>
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="flex text-orange-400 text-xs">
+            <div class="w-full lg:flex-grow">
+                <h1 id="productName" class="text-lg md:text-xl font-medium mb-3 md:mb-4 leading-tight">Outdoor 30L, 40L Portable Camping Cooler Compressor Cooling Freezer 12V/24V Home Small Refrigerator Car Fridges with Wheels</h1>
+                <div class="flex items-center gap-2 mb-3 md:mb-4">
+                    <div class="flex text-orange-400 text-[10px] md:text-xs">
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
@@ -133,32 +151,32 @@
 
                 <div class="mb-4">
                     <div class="flex items-baseline gap-2">
-                        <span id="productPrice" class="text-3xl font-bold price-red">$393.72</span>
-                        <span class="text-sm text-white bg-red-500 px-1 rounded">28% off</span>
+                        <span id="productPrice" class="text-2xl md:text-3xl font-bold price-red">$393.72</span>
+                        <span class="text-[10px] md:text-sm text-white bg-red-500 px-1 rounded">28% off</span>
                     </div>
                 </div>
 
-                <div class="bg-red-50 p-3 rounded border border-red-100 mb-6">
-                    <span class="text-xs text-red-600 font-medium">$32.92 off per $583.40</span>
+                <div class="bg-red-50 p-2 md:p-3 rounded border border-red-100 mb-6">
+                    <span class="text-[10px] md:text-xs text-red-600 font-medium">$32.92 off per $583.40</span>
                 </div>
 
                 <div class="mb-6">
-                    <h3 class="text-sm font-medium mb-2">Color: <span class="text-gray-500">Dark Grey</span></h3>
-                    <div class="flex gap-2">
-                        <button class="border-2 border-black px-4 py-1.5 text-xs rounded">Dark Grey</button>
+                    <h3 class="text-sm font-medium mb-2">Color: <span class="text-gray-500 text-xs">Dark Grey</span></h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="border-2 border-black px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs rounded">Dark Grey</button>
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <h3 class="text-sm font-medium mb-2">Plug Type: <span class="text-gray-500">CN</span></h3>
-                    <div class="flex gap-2">
-                        <button class="border-2 border-black px-4 py-1.5 text-xs rounded">CN</button>
+                    <h3 class="text-sm font-medium mb-2">Plug Type: <span class="text-gray-500 text-xs">CN</span></h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="border-2 border-black px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs rounded">CN</button>
                     </div>
                 </div>
             </div>
 
             <!-- Right: Buy Sidebar -->
-            <div class="w-full lg:w-64 border rounded-xl p-4 sticky top-20 h-fit">
+            <div class="w-full lg:w-72 border rounded-xl p-4 md:p-5 h-fit lg:sticky lg:top-24">
                 <div class="mb-4">
                     <h4 class="text-xs font-bold mb-2">Sold By: <span class="text-gray-500">Appliance Mart Store</span></h4>
                 </div>
