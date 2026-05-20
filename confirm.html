@@ -652,7 +652,7 @@
                   <div>
                       <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Payment Amount</label>
                       <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border">
-                          <span class="text-lg font-bold text-black" id="cryptoAmountDisplay">£ 4.54</span>
+                          <span class="text-lg font-bold text-black" id="cryptoAmountDisplay">$ 4.54</span>
                           <span class="text-xs font-medium text-gray-400" id="cryptoSymbolDisplay">USDT</span>
                       </div>
                   </div>
@@ -778,8 +778,11 @@
             radio.addEventListener('change', () => {
                 if (radio.checked && cryptoData[radio.value]) {
                     const data = cryptoData[radio.value];
+                    const totalAmount = document.querySelector('.text-2xl.font-bold').textContent;
+                    
                     document.getElementById('cryptoName').textContent = data.name;
                     document.getElementById('cryptoAddress').textContent = data.address;
+                    document.getElementById('cryptoAmountDisplay').textContent = totalAmount;
                     document.getElementById('cryptoSymbolDisplay').textContent = data.symbol;
                     document.getElementById('cryptoWarningSymbol').textContent = data.symbol;
                     document.getElementById('cryptoQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.address}`;
@@ -846,16 +849,19 @@
 
         // Helper function to save order to backend
         async function saveOrder(method) {
+            const totalText = document.querySelector('.text-2xl.font-bold').textContent;
+            const total = parseFloat(totalText.replace(/[^0-9.]/g, ''));
+            
             try {
                 const response = await fetch('/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         customerName: 'Guest Customer',
-                        totalAmount: 330833.25, // Example amount
+                        totalAmount: total || 4.54,
                         paymentMethod: method,
                         status: 'Pending',
-                        items: '4L/6L/8L Portable Car Fridge'
+                        items: 'Order from Checkout'
                     })
                 });
                 if (response.ok) console.log('Order saved successfully');
@@ -881,8 +887,11 @@
                 showMaintenance();
             } else if (cryptoData[selected.value]) {
                 const data = cryptoData[selected.value];
+                const totalAmount = document.querySelector('.text-2xl.font-bold').textContent;
+
                 document.getElementById('cryptoName').textContent = data.name;
                 document.getElementById('cryptoAddress').textContent = data.address;
+                document.getElementById('cryptoAmountDisplay').textContent = totalAmount;
                 document.getElementById('cryptoSymbolDisplay').textContent = data.symbol;
                 document.getElementById('cryptoWarningSymbol').textContent = data.symbol;
                 document.getElementById('cryptoQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.address}`;
