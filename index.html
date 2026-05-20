@@ -101,7 +101,7 @@
                     <i class="far fa-user text-xl group-hover:aliexpress-red"></i>
                     <span class="hidden md:inline text-xs mt-1">Account</span>
                 </div>
-                <div class="flex flex-col items-center cursor-pointer group relative">
+                <div onclick="toggleCart()" class="flex flex-col items-center cursor-pointer group relative">
                     <i class="fas fa-shopping-cart text-xl group-hover:aliexpress-red"></i>
                     <span class="hidden md:inline text-xs mt-1">Cart</span>
                     <span class="absolute -top-1 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
@@ -785,6 +785,33 @@
             <i class="fas fa-pencil-alt text-xl"></i>
         </button>
     </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebarOverlay" class="fixed inset-0 bg-black/50 z-[100] hidden transition-opacity duration-300"></div>
+    <div id="cartSidebar" class="fixed top-0 right-0 w-full max-w-md h-full bg-white z-[101] translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="p-6 border-b flex items-center justify-between">
+            <h2 class="text-xl font-bold">Shopping Cart (<span id="cartSidebarCount">0</span>)</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-black transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div id="cartItemsContainer" class="flex-grow overflow-y-auto p-6 space-y-6">
+            <!-- Cart items will be injected here -->
+        </div>
+        <div class="p-6 border-t bg-gray-50">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-500 font-medium">Subtotal</span>
+                <span id="cartSubtotal" class="text-2xl font-bold">$0.00</span>
+            </div>
+            <a href="confirm.html" class="block w-full aliexpress-bg-red text-white text-center font-bold py-4 rounded-full hover:bg-red-600 transition-all shadow-lg">
+                Checkout
+            </a>
+            <button onclick="toggleCart()" class="w-full text-center text-sm text-gray-500 mt-4 font-medium hover:text-black transition-colors">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
     <script>
         function updateLocation(flagCode, currency, countryName) {
             localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
@@ -812,6 +839,91 @@
             const count = cart.reduce((sum, item) => sum + item.qty, 0);
             const cartCountEl = document.querySelector('.fa-shopping-cart + span') || document.querySelector('.relative.cursor-pointer span:last-child');
             if (cartCountEl) cartCountEl.textContent = count;
+        }
+
+        function toggleCart() {
+            const overlay = document.getElementById('cartSidebarOverlay');
+            const sidebar = document.getElementById('cartSidebar');
+            const isHidden = overlay.classList.contains('hidden');
+            
+            if (isHidden) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.add('opacity-100');
+                    sidebar.classList.remove('translate-x-full');
+                }, 10);
+                renderCart();
+            } else {
+                overlay.classList.remove('opacity-100');
+                sidebar.classList.add('translate-x-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const countEl = document.getElementById('cartSidebarCount');
+            
+            countEl.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-center py-20">
+                        <i class="fas fa-shopping-cart text-6xl text-gray-100 mb-6"></i>
+                        <p class="text-gray-500 mb-8 font-medium">Your cart is empty</p>
+                        <button onclick="toggleCart()" class="border-2 border-black px-8 py-3 rounded-full font-bold hover:bg-gray-50 transition-all">Start Shopping</button>
+                    </div>
+                `;
+                subtotalEl.textContent = '$0.00';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex gap-4 group">
+                    <img src="${item.image}" class="w-20 h-20 object-cover rounded-lg bg-gray-50">
+                    <div class="flex-grow min-w-0">
+                        <div class="flex justify-between items-start gap-2 mb-1">
+                            <h3 class="text-sm font-medium text-gray-800 line-clamp-2 leading-tight">${item.name}</h3>
+                            <button onclick="removeFromCart(${index})" class="text-gray-400 hover:text-red-500 transition-colors">
+                                <i class="fas fa-trash-alt text-xs"></i>
+                            </button>
+                        </div>
+                        ${item.color ? `<p class="text-[10px] text-gray-400 mb-2 uppercase tracking-wider font-bold">Color: ${item.color}</p>` : ''}
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center border rounded-lg overflow-hidden bg-white shadow-sm">
+                                <button onclick="updateCartQty(${index}, -1)" class="px-2 py-1 text-gray-500 hover:bg-gray-50">-</button>
+                                <span class="px-3 py-1 text-xs font-bold w-8 text-center">${item.qty}</span>
+                                <button onclick="updateCartQty(${index}, 1)" class="px-2 py-1 text-gray-500 hover:bg-gray-50">+</button>
+                            </div>
+                            <span class="font-bold text-sm">$${(item.price * item.qty).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            subtotalEl.textContent = `$${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+        }
+
+        function updateCartQty(index, delta) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[index].qty += delta;
+            if (cart[index].qty < 1) cart[index].qty = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
         }
 
         // Initialize on load
