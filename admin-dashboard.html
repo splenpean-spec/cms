@@ -53,6 +53,7 @@
                         <th class="px-6 py-4 font-bold text-sm text-gray-500">Image</th>
                         <th class="px-6 py-4 font-bold text-sm text-gray-500">Name</th>
                         <th class="px-6 py-4 font-bold text-sm text-gray-500">Price</th>
+                        <th class="px-6 py-4 font-bold text-sm text-gray-500">Quantity</th>
                         <th class="px-6 py-4 font-bold text-sm text-gray-500">Category</th>
                         <th class="px-6 py-4 font-bold text-sm text-gray-500">Actions</th>
                     </tr>
@@ -95,10 +96,14 @@
                     <label class="block text-sm font-bold mb-1">Product Name</label>
                     <input type="text" id="name" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-bold mb-1">Price ($)</label>
                             <input type="number" id="price" step="0.01" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Quantity</label>
+                            <input type="number" id="quantity" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-bold mb-1">Category</label>
@@ -146,6 +151,11 @@
                     <td class="px-6 py-4"><img src="${p.image}" class="w-12 h-12 object-cover rounded"></td>
                     <td class="px-6 py-4 font-medium">${p.name}</td>
                     <td class="px-6 py-4">$ ${p.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold ${p.quantity > 10 ? 'bg-green-100 text-green-700' : p.quantity > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">
+                            ${p.quantity} in stock
+                        </span>
+                    </td>
                     <td class="px-6 py-4 text-sm text-gray-500">${p.category || 'N/A'}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-3">
@@ -184,6 +194,7 @@
             document.getElementById('productId').value = p ? p.id : '';
             document.getElementById('name').value = p ? p.name : '';
             document.getElementById('price').value = p ? p.price : '';
+            document.getElementById('quantity').value = p ? p.quantity : '0';
             document.getElementById('category').value = p ? p.category : '';
             document.getElementById('image').value = p ? p.image : '';
             document.getElementById('description').value = p ? p.description : '';
@@ -199,6 +210,7 @@
             const data = {
                 name: document.getElementById('name').value,
                 price: parseFloat(document.getElementById('price').value),
+                quantity: parseInt(document.getElementById('quantity').value),
                 category: document.getElementById('category').value,
                 image: document.getElementById('image').value,
                 description: document.getElementById('description').value

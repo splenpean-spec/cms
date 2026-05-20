@@ -109,7 +109,7 @@
                 </div>
                 <div class="flex-grow">
                     <div class="relative group">
-                        <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg" class="w-full rounded-lg">
+                        <img id="productImage" src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg_640x640.jpg" class="w-full rounded-lg">
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/50 rounded-full flex items-center justify-center cursor-pointer">
                             <i class="fas fa-play text-black ml-1"></i>
                         </div>
@@ -119,7 +119,7 @@
 
             <!-- Middle: Product Info -->
             <div class="w-full lg:w-1/3">
-                <h1 class="text-xl font-medium mb-4 leading-tight">Outdoor 30L, 40L Portable Camping Cooler Compressor Cooling Freezer 12V/24V Home Small Refrigerator Car Fridges with Wheels</h1>
+                <h1 id="productName" class="text-xl font-medium mb-4 leading-tight">Outdoor 30L, 40L Portable Camping Cooler Compressor Cooling Freezer 12V/24V Home Small Refrigerator Car Fridges with Wheels</h1>
                 <div class="flex items-center gap-2 mb-4">
                     <div class="flex text-orange-400 text-xs">
                         <i class="fas fa-star"></i>
@@ -133,7 +133,7 @@
 
                 <div class="mb-4">
                     <div class="flex items-baseline gap-2">
-                        <span class="text-3xl font-bold price-red">$393.72</span>
+                        <span id="productPrice" class="text-3xl font-bold price-red">$393.72</span>
                         <span class="text-sm text-white bg-red-500 px-1 rounded">28% off</span>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                             <button class="px-2 py-1 text-gray-500 border-l">+</button>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-500">510 available</p>
+                    <p id="stockStatus" class="text-[10px] text-gray-500">510 available</p>
                     <a href="confirm.html" class="block w-full bg-black text-white text-center font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">Buy now</a>
                     <button class="w-full border-2 border-black text-black font-bold py-3 rounded-full hover:bg-gray-50 transition-colors">Add to cart</button>
                     <div class="flex gap-4 pt-2">
@@ -305,7 +305,7 @@
         <!-- Description Section -->
         <section class="mb-12">
             <h2 class="text-xl font-bold mb-6">Description</h2>
-            <div class="prose max-w-none text-sm text-gray-600">
+            <div id="productDescription" class="prose max-w-none text-sm text-gray-600">
                 <p>This portable refrigerator is perfect for your outdoor camping needs. With a high-quality compressor, it provides rapid cooling and efficient power consumption. Durable wheels and a sturdy handle make it easy to transport anywhere.</p>
             </div>
         </section>
@@ -377,6 +377,44 @@
         </div>
     </footer>
     <script>
+        async function loadProductDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            if (!productId) return;
+
+            try {
+                const res = await fetch(`/api/products/${productId}`);
+                if (!res.ok) throw new Error('Product not found');
+                const p = await res.json();
+
+                // Update UI elements
+                document.title = `AliExpress - ${p.name}`;
+                document.getElementById('productName').textContent = p.name;
+                document.getElementById('productPrice').textContent = `$${p.price.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                document.getElementById('productImage').src = p.image;
+                document.getElementById('productDescription').textContent = p.description || 'No description available.';
+                document.getElementById('stockStatus').textContent = `${p.quantity} available`;
+                document.getElementById('stockStatus').className = `text-[10px] ${p.quantity > 0 ? 'text-gray-500' : 'text-red-500 font-bold'}`;
+                
+                if (p.quantity <= 0) {
+                    const buyBtn = document.querySelector('a[href="confirm.html"]');
+                    if (buyBtn) {
+                        buyBtn.textContent = 'Out of Stock';
+                        buyBtn.classList.add('pointer-events-none', 'opacity-50');
+                        buyBtn.href = '#';
+                    }
+                }
+
+                // Update breadcrumb or category if available
+                if (p.category) {
+                    // Could add category logic here
+                }
+
+            } catch (e) {
+                console.error('Error loading product:', e);
+            }
+        }
+
         function updateLocation(flagCode, currency, countryName) {
             localStorage.setItem('selectedLocation', JSON.stringify({ flagCode, currency, countryName }));
             applyLocation();
@@ -391,7 +429,10 @@
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', applyLocation);
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLocation();
+            loadProductDetails();
+        });
     </script>
 </body>
 </html>

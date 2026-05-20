@@ -234,7 +234,71 @@
         <!-- Main Content Area -->
         <main class="flex-grow">
             <!-- Product Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Search Results -->
+            <div id="dynamicSearchResults" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <!-- Dynamic Results will be injected here -->
+            </div>
+
+            <script>
+                async function loadSearchResults() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const query = urlParams.get('q')?.toLowerCase() || '';
+                    
+                    try {
+                        const res = await fetch('/api/products');
+                        const products = await res.json();
+                        const container = document.getElementById('dynamicSearchResults');
+                        
+                        const filtered = products.filter(p => 
+                            p.name.toLowerCase().includes(query) || 
+                            p.category?.toLowerCase().includes(query) ||
+                            p.description?.toLowerCase().includes(query)
+                        );
+
+                        if (filtered.length > 0) {
+                            container.innerHTML = filtered.map(p => `
+                                <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                                    <a href="item.html?id=${p.id}" class="block">
+                                        <div class="relative">
+                                            <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover">
+                                            <div class="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full shadow-sm">
+                                                <i class="fas fa-shopping-cart text-xs"></i>
+                                            </div>
+                                        </div>
+                                        <div class="p-3">
+                                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2">${p.name}</h3>
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-[10px] font-bold">$</span>
+                                                <span class="text-lg font-bold">${p.price.toLocaleString()}</span>
+                                            </div>
+                                            <div class="mt-1 text-[10px] ${p.quantity > 0 ? 'text-green-600' : 'text-red-600'} font-bold">
+                                                ${p.quantity > 0 ? `${p.quantity} in stock` : 'Out of stock'}
+                                            </div>
+                                            <div class="flex items-center gap-1 mt-1">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                </div>
+                                                <span class="text-[10px] text-gray-400">${p.soldCount || '100'}+ sold</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            `).join('');
+                        } else {
+                            // If no dynamic results, keep static ones visible or show "No results"
+                        }
+                    } catch (e) {
+                        console.error('Error loading search results:', e);
+                    }
+                }
+                loadSearchResults();
+            </script>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 <!-- Product 1 -->
                 <div class="product-card bg-white rounded-lg overflow-hidden cursor-pointer transition-all border border-transparent hover:border-gray-100">
                     <a href="item.html" class="block">
