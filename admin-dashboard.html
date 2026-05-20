@@ -158,6 +158,10 @@
                     <input type="text" id="image" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
                 </div>
                 <div>
+                    <label class="block text-sm font-bold mb-1">Available Colors (comma separated)</label>
+                    <input type="text" id="colors" placeholder="e.g. Red, Blue, Black" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+                <div>
                     <label class="block text-sm font-bold mb-1">Description</label>
                     <textarea id="description" rows="3" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-red-500 outline-none"></textarea>
                 </div>
@@ -250,6 +254,7 @@
             document.getElementById('quantity').value = p ? p.quantity : '0';
             document.getElementById('category').value = p ? p.category : '';
             document.getElementById('image').value = p ? p.image : '';
+            document.getElementById('colors').value = p ? (p.colors || '') : '';
             document.getElementById('description').value = p ? p.description : '';
         }
 
@@ -266,6 +271,7 @@
                 quantity: parseInt(document.getElementById('quantity').value),
                 category: document.getElementById('category').value,
                 image: document.getElementById('image').value,
+                colors: document.getElementById('colors').value,
                 description: document.getElementById('description').value
             };
 

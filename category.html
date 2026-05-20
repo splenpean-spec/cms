@@ -593,6 +593,15 @@
             // Update Header
             const currentFlag = document.getElementById('currentFlag');
             if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartCountEl = document.querySelector('.fa-shopping-cart + span') || document.querySelector('.relative.cursor-pointer span:last-child');
+            if (cartCountEl) cartCountEl.textContent = count;
         }
 
         // Initialize on load

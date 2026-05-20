@@ -160,10 +160,10 @@
                     <span class="text-[10px] md:text-xs text-red-600 font-medium">$32.92 off per $583.40</span>
                 </div>
 
-                <div class="mb-6">
-                    <h3 class="text-sm font-medium mb-2">Color: <span class="text-gray-500 text-xs">Dark Grey</span></h3>
-                    <div class="flex flex-wrap gap-2">
-                        <button class="border-2 border-black px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs rounded">Dark Grey</button>
+                <div id="colorSelection" class="mb-6">
+                    <h3 class="text-sm font-medium mb-2">Color: <span id="selectedColorName" class="text-gray-500 text-xs">Default</span></h3>
+                    <div id="colorOptions" class="flex flex-wrap gap-2">
+                        <!-- Dynamic Color Buttons -->
                     </div>
                 </div>
 
@@ -201,15 +201,15 @@
                 <div class="mt-6 space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold">Quantity</span>
-                        <div class="flex items-center border rounded">
-                            <button class="px-2 py-1 text-gray-500 border-r">-</button>
-                            <span class="px-3 py-1 text-xs">1</span>
-                            <button class="px-2 py-1 text-gray-500 border-l">+</button>
+                        <div class="flex items-center border rounded overflow-hidden">
+                            <button onclick="changeQty(-1)" class="px-3 py-1 text-gray-500 border-r hover:bg-gray-100">-</button>
+                            <input type="number" id="buyQty" value="1" min="1" class="w-12 text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            <button onclick="changeQty(1)" class="px-3 py-1 text-gray-500 border-l hover:bg-gray-100">+</button>
                         </div>
                     </div>
                     <p id="stockStatus" class="text-[10px] text-gray-500">510 available</p>
                     <a href="confirm.html" class="block w-full bg-black text-white text-center font-bold py-3 rounded-full hover:bg-gray-800 transition-colors">Buy now</a>
-                    <button class="w-full border-2 border-black text-black font-bold py-3 rounded-full hover:bg-gray-50 transition-colors">Add to cart</button>
+                    <button id="addToCartBtn" class="w-full border-2 border-black text-black font-bold py-3 rounded-full hover:bg-gray-50 transition-colors">Add to cart</button>
                     <div class="flex gap-4 pt-2">
                         <button class="flex items-center gap-1 text-xs text-gray-600 hover:text-black">
                             <i class="fas fa-share"></i> Share
@@ -395,6 +395,9 @@
         </div>
     </footer>
     <script>
+        let currentProduct = null;
+        let selectedColor = null;
+
         async function loadProductDetails() {
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
@@ -404,6 +407,7 @@
                 const res = await fetch(`/api/products/${productId}`);
                 if (!res.ok) throw new Error('Product not found');
                 const p = await res.json();
+                currentProduct = p;
 
                 // Update UI elements
                 document.title = `AliExpress - ${p.name}`;
@@ -414,6 +418,19 @@
                 document.getElementById('stockStatus').textContent = `${p.quantity} available`;
                 document.getElementById('stockStatus').className = `text-[10px] ${p.quantity > 0 ? 'text-gray-500' : 'text-red-500 font-bold'}`;
                 
+                // Color Selection
+                const colorOptions = document.getElementById('colorOptions');
+                const colorSelection = document.getElementById('colorSelection');
+                if (p.colors) {
+                    const colors = p.colors.split(',').map(c => c.trim());
+                    colorOptions.innerHTML = colors.map((c, i) => `
+                        <button onclick="selectColor('${c}', this)" class="color-btn border-2 ${i === 0 ? 'border-black' : 'border-gray-200'} px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs rounded hover:border-black transition-all">${c}</button>
+                    `).join('');
+                    selectColor(colors[0], colorOptions.children[0]);
+                } else {
+                    colorSelection.style.display = 'none';
+                }
+
                 if (p.quantity <= 0) {
                     const buyBtn = document.querySelector('a[href="confirm.html"]');
                     if (buyBtn) {
@@ -423,14 +440,24 @@
                     }
                 }
 
-                // Update breadcrumb or category if available
-                if (p.category) {
-                    // Could add category logic here
-                }
-
             } catch (e) {
                 console.error('Error loading product:', e);
             }
+        }
+
+        function selectColor(color, el) {
+            selectedColor = color;
+            document.getElementById('selectedColorName').textContent = color;
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.replace('border-black', 'border-gray-200'));
+            el.classList.replace('border-gray-200', 'border-black');
+        }
+
+        function changeQty(amt) {
+            const qtyInput = document.getElementById('buyQty');
+            let val = parseInt(qtyInput.value) + amt;
+            if (val < 1) val = 1;
+            if (currentProduct && val > currentProduct.quantity) val = currentProduct.quantity;
+            qtyInput.value = val;
         }
 
         function updateLocation(flagCode, currency, countryName) {
@@ -440,11 +467,45 @@
 
         function applyLocation() {
             const location = JSON.parse(localStorage.getItem('selectedLocation')) || { flagCode: 'us', currency: 'USD', countryName: 'United States' };
-            
-            // Update Header
             const currentFlag = document.getElementById('currentFlag');
             if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+            updateCartCount();
         }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartCountEl = document.querySelector('.fa-shopping-cart + span') || document.querySelector('.relative.cursor-pointer span');
+            if (cartCountEl) cartCountEl.textContent = count;
+        }
+
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+            if (!currentProduct) return;
+            
+            const qty = parseInt(document.getElementById('buyQty').value);
+            const cartItem = {
+                id: currentProduct.id,
+                name: currentProduct.name,
+                price: currentProduct.price,
+                image: currentProduct.image,
+                qty: qty,
+                color: selectedColor
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existing = cart.find(item => item.id === cartItem.id && item.color === cartItem.color);
+            
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push(cartItem);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            alert('Added to cart successfully!');
+        });
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {

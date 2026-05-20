@@ -36,7 +36,8 @@ const Product = sequelize.define('Product', {
     category: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT },
     quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
-    soldCount: { type: DataTypes.INTEGER, defaultValue: 0 }
+    soldCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    colors: { type: DataTypes.STRING } // Comma-separated colors
 });
 
 const Order = sequelize.define('Order', {
