@@ -163,7 +163,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }
 
 // Database Sync and Server Start
 console.log('Starting database sync...');
-sequelize.sync()
+sequelize.sync({ alter: true })
     .then(async () => {
         console.log('Database synced successfully');
         
