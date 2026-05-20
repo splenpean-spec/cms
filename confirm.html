@@ -78,7 +78,9 @@
             align-items: center;
             justify-content: center;
         }
-        #cryptoModalOverlay.active {
+        #cryptoModalOverlay.active,
+        #addressModalOverlay.active,
+        #refundModalOverlay.active {
             display: flex;
         }
         .crypto-address-box {
@@ -161,8 +163,14 @@
                 <!-- Shipping Address -->
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <h2 class="text-lg font-bold mb-4">Shipping address</h2>
-                    <button class="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1">
-                        <i class="fas fa-plus text-xs"></i> Add new address
+                    <div id="addressDisplay" class="hidden mb-4">
+                        <p id="displayFullName" class="font-bold text-sm"></p>
+                        <p id="displayPhone" class="text-xs text-gray-500"></p>
+                        <p id="displayStreet" class="text-xs text-gray-500"></p>
+                        <p id="displayCityState" class="text-xs text-gray-500"></p>
+                    </div>
+                    <button onclick="openAddressModal()" class="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1">
+                        <i class="fas fa-plus text-xs"></i> <span id="addressBtnText">Add new address</span>
                     </button>
                 </div>
 
@@ -170,7 +178,7 @@
                 <div class="bg-white rounded-xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-bold text-sm">Order confirmation</h3>
-                        <p class="text-[10px] text-red-600 flex items-center gap-1"><i class="fas fa-shield-alt"></i> Refund if package lost <i class="fas fa-chevron-right text-[8px]"></i></p>
+                        <p onclick="openRefundModal()" class="text-[10px] text-red-600 flex items-center gap-1 cursor-pointer hover:underline"><i class="fas fa-shield-alt"></i> Refund if package lost <i class="fas fa-chevron-right text-[8px]"></i></p>
                     </div>
                     <div id="checkoutItemsList" class="space-y-6">
                         <!-- Dynamic Cart Items will be injected here -->
@@ -700,6 +708,95 @@
           </div>
       </div>
 
+      <!-- Address Modal Overlay -->
+      <div id="addressModalOverlay" class="fixed inset-0 bg-black/50 z-[140] hidden items-center justify-center">
+          <div class="modal-content shadow-2xl max-w-lg">
+              <button onclick="closeAddressModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                  <i class="fas fa-times text-xl"></i>
+              </button>
+              <h2 class="text-xl font-bold mb-6">Shipping Address</h2>
+              <form id="addressForm" class="space-y-4">
+                  <div class="grid grid-cols-2 gap-4">
+                      <div>
+                          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Full Name</label>
+                          <input type="text" id="fullName" required class="input-field" placeholder="John Doe">
+                      </div>
+                      <div>
+                          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                          <input type="tel" id="phoneNumber" required class="input-field" placeholder="+1 234 567 890">
+                      </div>
+                  </div>
+                  <div>
+                      <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Street Address</label>
+                      <input type="text" id="streetAddress" required class="input-field" placeholder="123 Main St, Apt 4B">
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                      <div>
+                          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">City</label>
+                          <input type="text" id="city" required class="input-field" placeholder="New York">
+                      </div>
+                      <div>
+                          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">State / Province</label>
+                          <input type="text" id="state" required class="input-field" placeholder="NY">
+                      </div>
+                  </div>
+                  <div>
+                      <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Country</label>
+                      <select id="country" class="input-field select-field">
+                          <option value="United States">United States</option>
+                          <option value="United Kingdom">United Kingdom</option>
+                          <option value="Nigeria">Nigeria</option>
+                          <option value="Canada">Canada</option>
+                      </select>
+                  </div>
+                  <button type="submit" class="w-full aliexpress-bg-red text-white font-bold py-4 rounded-full text-lg mt-4 hover:opacity-90 transition-opacity">
+                      Save Address
+                  </button>
+              </form>
+          </div>
+      </div>
+
+      <!-- Refund Modal Overlay -->
+      <div id="refundModalOverlay" class="fixed inset-0 bg-black/50 z-[140] hidden items-center justify-center">
+          <div class="modal-content shadow-2xl max-w-lg">
+              <button onclick="closeRefundModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
+                  <i class="fas fa-times text-xl"></i>
+              </button>
+              <div class="text-center mb-6">
+                  <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i class="fas fa-shield-alt text-2xl"></i>
+                  </div>
+                  <h2 class="text-xl font-bold">Buyer Protection</h2>
+              </div>
+              <div class="space-y-6 text-sm text-gray-600">
+                  <div class="flex gap-4">
+                      <i class="fas fa-box-open text-red-500 mt-1"></i>
+                      <div>
+                          <p class="font-bold text-gray-800">Full Refund if package lost</p>
+                          <p class="text-xs">If your package does not arrive within the guaranteed delivery time, you are eligible for a full refund.</p>
+                      </div>
+                  </div>
+                  <div class="flex gap-4">
+                      <i class="fas fa-undo text-red-500 mt-1"></i>
+                      <div>
+                          <p class="font-bold text-gray-800">Easy Returns</p>
+                          <p class="text-xs">Items can be returned within 15 days of receipt if they are in original condition.</p>
+                      </div>
+                  </div>
+                  <div class="flex gap-4">
+                      <i class="fas fa-check-circle text-red-500 mt-1"></i>
+                      <div>
+                          <p class="font-bold text-gray-800">Guaranteed Quality</p>
+                          <p class="text-xs">We ensure all sellers follow strict quality guidelines for every item shipped.</p>
+                      </div>
+                  </div>
+              </div>
+              <button onclick="closeRefundModal()" class="w-full bg-black text-white font-bold py-3 rounded-full mt-8 hover:bg-gray-800 transition-colors">
+                  I Understand
+              </button>
+          </div>
+      </div>
+
     <script>
         // Initialize checkout data
         function loadCheckoutData() {
@@ -761,6 +858,79 @@
         document.addEventListener('DOMContentLoaded', () => {
             applyLocation();
             loadCheckoutData();
+            loadAddress();
+        });
+
+        const addressModalOverlay = document.getElementById('addressModalOverlay');
+        const refundModalOverlay = document.getElementById('refundModalOverlay');
+        const addressForm = document.getElementById('addressForm');
+
+        function openAddressModal() {
+            addressModalOverlay.classList.remove('hidden');
+            addressModalOverlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            
+            // Pre-fill if exists
+            const saved = JSON.parse(localStorage.getItem('shippingAddress'));
+            if (saved) {
+                document.getElementById('fullName').value = saved.fullName || '';
+                document.getElementById('phoneNumber').value = saved.phoneNumber || '';
+                document.getElementById('streetAddress').value = saved.streetAddress || '';
+                document.getElementById('city').value = saved.city || '';
+                document.getElementById('state').value = saved.state || '';
+                document.getElementById('country').value = saved.country || 'United States';
+            }
+        }
+
+        function closeAddressModal() {
+            addressModalOverlay.classList.add('hidden');
+            addressModalOverlay.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openRefundModal() {
+            refundModalOverlay.classList.remove('hidden');
+            refundModalOverlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRefundModal() {
+            refundModalOverlay.classList.add('hidden');
+            refundModalOverlay.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function loadAddress() {
+            const saved = JSON.parse(localStorage.getItem('shippingAddress'));
+            const display = document.getElementById('addressDisplay');
+            const btnText = document.getElementById('addressBtnText');
+            
+            if (saved) {
+                display.classList.remove('hidden');
+                document.getElementById('displayFullName').textContent = saved.fullName;
+                document.getElementById('displayPhone').textContent = saved.phoneNumber;
+                document.getElementById('displayStreet').textContent = saved.streetAddress;
+                document.getElementById('displayCityState').textContent = `${saved.city}, ${saved.state}, ${saved.country}`;
+                btnText.textContent = 'Change address';
+            } else {
+                display.classList.add('hidden');
+                btnText.textContent = 'Add new address';
+            }
+        }
+
+        addressForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const address = {
+                fullName: document.getElementById('fullName').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                streetAddress: document.getElementById('streetAddress').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                country: document.getElementById('country').value
+            };
+            localStorage.setItem('shippingAddress', JSON.stringify(address));
+            loadAddress();
+            closeAddressModal();
         });
 
         const placeOrderBtn = document.getElementById('placeOrderBtn');
