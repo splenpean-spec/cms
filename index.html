@@ -47,33 +47,55 @@
         /* Mega Menu Styles */
         .mega-menu-container {
             width: 900px !important;
-            min-height: 500px;
+            min-height: 520px;
             display: none;
             position: absolute;
             top: 100%;
             left: 0;
             background: white;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 1.25rem;
             z-index: 110;
-            margin-top: 0.25rem;
-            overflow: visible; /* Changed from hidden to show sub-menus */
+            margin-top: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
         }
 
         .group:hover .mega-menu-container {
             display: flex;
+            animation: megaSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes megaSlideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .category-sidebar {
             width: 240px;
-            background: white;
-            border-right: 1px solid #f3f4f6;
-            padding: 1rem 0;
+            background: #fafafa;
+            border-right: 1px solid #f0f0f0;
+            padding: 0.75rem 0;
             flex-shrink: 0;
         }
 
         .sidebar-item {
-            position: static; /* Important for absolute positioning of sub-menu relative to mega-menu-container */
+            position: static;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item > a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.25rem;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: white;
         }
 
         .sidebar-item .sub-menu {
@@ -86,23 +108,92 @@
             background: white;
             padding: 1.5rem 2rem;
             overflow-y: auto;
-            border-radius: 0 1.5rem 1.5rem 0;
-        }
-
-        .sidebar-item:hover {
-            background-color: #fef2f2;
+            border-radius: 0 1.25rem 1.25rem 0;
         }
 
         .sidebar-item:hover .sub-menu {
             display: block;
+            animation: subMenuFade 0.2s ease-out;
+        }
+
+        @keyframes subMenuFade {
+            from { opacity: 0; transform: translateX(5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .sidebar-item:hover > a {
+            color: #FF4747;
+            background: white;
         }
 
         .sidebar-item:hover > a span {
+            font-weight: 600;
+        }
+
+        .sidebar-item:hover > a i.fa-chevron-right {
+            transform: translateX(3px);
             color: #FF4747;
         }
 
-        .sidebar-item:hover > a i {
+        /* Sub-menu Typography */
+        .sub-menu h3 {
+            color: #111;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sub-menu h4 {
+            color: #222;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid #f5f5f5;
+            padding-bottom: 0.4rem;
+        }
+
+        .sub-link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sub-link-list a {
+            color: #666;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .sub-link-list a:hover {
             color: #FF4747;
+            padding-left: 2px;
+        }
+
+        /* Recommended Grid */
+        .rec-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .rec-item:hover {
+            transform: translateY(-4px);
+        }
+        .rec-img-wrapper {
+            aspect-ratio: 1;
+            background: #f8f8f8;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .rec-item:hover .rec-img-wrapper {
+            border-color: #ffe4e4;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(255, 71, 71, 0.08);
         }
     </style>
 </head>
@@ -193,9 +284,10 @@
         <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide hidden md:block">
             <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
                 <div class="relative group">
-                    <button class="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full hover:bg-gray-200 transition-colors cursor-pointer">
-                        <i class="fas fa-bars"></i>
-                        <span>All Categories</span>
+                    <button class="flex items-center gap-2 bg-gray-50 border border-gray-100 px-5 py-2.5 rounded-full hover:bg-gray-100 hover:border-gray-200 transition-all duration-300 cursor-pointer shadow-sm group-hover:bg-white group-hover:shadow-md">
+                        <i class="fas fa-bars text-gray-500 group-hover:text-red-500"></i>
+                        <span class="text-xs font-bold text-gray-700">All Categories</span>
+                        <i class="fas fa-chevron-down text-[10px] text-gray-300 ml-1 group-hover:rotate-180 transition-transform duration-300"></i>
                     </button>
                     <!-- Categories Dropdown (Mega Menu style) -->
                     <div class="mega-menu-container">
@@ -213,232 +305,506 @@
                                     <div class="grid grid-cols-1 gap-8">
                                         <!-- Recommended -->
                                         <div>
-                                            <h3 class="font-bold text-sm mb-4">Recommended</h3>
+                                            <h3><i class="fas fa-thumbs-up text-red-500 text-xs"></i> Recommended</h3>
                                             <div class="grid grid-cols-6 gap-4">
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Spoilers & Wings</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Spoilers</p>
                                                 </div>
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Wheels & Tires</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Wheels</p>
                                                 </div>
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Gauges & Monitors</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Gauges</p>
                                                 </div>
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Keys & Remote...</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Keys</p>
                                                 </div>
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Styling & Body Parts</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Body Parts</p>
                                                 </div>
-                                                <div class="text-center group/sub">
-                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
                                                         <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
                                                     </div>
-                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Car Wraps...</p>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Car Wraps</p>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Shop By Brand -->
-                                        <div>
-                                            <h3 class="font-bold text-sm mb-4">Shop By Brand</h3>
-                                            <div class="grid grid-cols-7 gap-4">
-                                                <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
-                                                <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
                                             </div>
                                         </div>
 
                                         <!-- Grid Subcategories -->
                                         <div class="grid grid-cols-4 gap-8">
                                             <div>
-                                                <h4 class="font-bold text-xs mb-3">Car Electronics</h4>
-                                                <ul class="space-y-2 text-[10px] text-gray-500">
-                                                    <li><a href="#" class="hover:text-red-500">Keys & Remote Systems</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Gauges & Monitors</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Smart Driving Systems</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Driving Simulators</a></li>
-                                                </ul>
+                                                <h4>Car Electronics</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Keys & Remote Systems</a>
+                                                    <a href="#">Gauges & Monitors</a>
+                                                    <a href="#">Smart Driving Systems</a>
+                                                    <a href="#">Driving Simulators</a>
+                                                    <a href="#">Car Audio & Video</a>
+                                                </div>
                                             </div>
                                             <div>
-                                                <h4 class="font-bold text-xs mb-3">Apparel & Racing Gear</h4>
-                                                <ul class="space-y-2 text-[10px] text-gray-500">
-                                                    <li><a href="#" class="hover:text-red-500">Professional Racing Ap...</a></li>
-                                                </ul>
-                                                <h4 class="font-bold text-xs mt-4 mb-3">Car Lights</h4>
-                                                <ul class="space-y-2 text-[10px] text-gray-500">
-                                                    <li><a href="#" class="hover:text-red-500">Headlight Assemblies</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Decorative & Custom Li...</a></li>
-                                                </ul>
+                                                <h4>Racing & Lights</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Racing Gear</a>
+                                                    <a href="#">Headlight Assemblies</a>
+                                                    <a href="#">Decorative Lights</a>
+                                                    <a href="#">LED Light Bars</a>
+                                                </div>
                                             </div>
                                             <div>
-                                                <h4 class="font-bold text-xs mb-3">Car Care</h4>
-                                                <ul class="space-y-2 text-[10px] text-gray-500">
-                                                    <li><a href="#" class="hover:text-red-500">Car Protection</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Paint & Rim Care</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Cleaning Agents</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Cleaning Tools</a></li>
-                                                </ul>
+                                                <h4>Car Care</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Car Protection</a>
+                                                    <a href="#">Paint & Rim Care</a>
+                                                    <a href="#">Cleaning Agents</a>
+                                                    <a href="#">Cleaning Tools</a>
+                                                </div>
                                             </div>
                                             <div>
-                                                <h4 class="font-bold text-xs mb-3">Exterior Accessories</h4>
-                                                <ul class="space-y-2 text-[10px] text-gray-500">
-                                                    <li><a href="#" class="hover:text-red-500">Car Wraps, Stickers & Fi...</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Safety & Awareness</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Weather Protection</a></li>
-                                                    <li><a href="#" class="hover:text-red-500">Styling & Body Parts</a></li>
-                                                </ul>
+                                                <h4>Exterior</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Car Wraps & Stickers</a>
+                                                    <a href="#">Safety & Awareness</a>
+                                                    <a href="#">Weather Protection</a>
+                                                    <a href="#">Styling & Body Parts</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Other Categories (Placeholders) -->
+                            <!-- Appliances -->
                             <div class="sidebar-item">
-                                <a href="category.html?cat=Appliances" class="flex items-center justify-between p-3 transition-colors">
+                                <a href="category.html?cat=Appliances">
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-blender text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Appliances</span>
+                                        <span class="text-xs font-medium">Appliances</span>
                                     </div>
                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
                                 </a>
                                 <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-blender text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs">Browse Appliances Collection</p>
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-star text-yellow-400 text-xs"></i> Hot Categories</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Fans</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/Se29a44f77c8e42369680c8a51469e099V.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Vacuum</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Air Fryer</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Kitchen Appliances</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Coffee Makers</a>
+                                                    <a href="#">Blenders</a>
+                                                    <a href="#">Juicers</a>
+                                                    <a href="#">Electric Kettles</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Household</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Vacuum Cleaners</a>
+                                                    <a href="#">Air Purifiers</a>
+                                                    <a href="#">Humidifiers</a>
+                                                    <a href="#">Garment Steamers</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Personal Care</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Hair Dryers</a>
+                                                    <a href="#">Electric Shavers</a>
+                                                    <a href="#">Epilators</a>
+                                                    <a href="#">Oral Care</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Women's Clothing -->
                             <div class="sidebar-item">
-                                <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between p-3 transition-colors">
+                                <a href="category.html?cat=Women's Fashion">
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-venus text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Women's Clothing</span>
+                                        <span class="text-xs font-medium">Women's Clothing</span>
                                     </div>
                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
                                 </a>
                                 <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-venus text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Browse Women's Fashion Collection</p>
-                                        <p class="text-[10px] mt-2">Dresses, Tops, Accessories & More</p>
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-heart text-pink-500 text-xs"></i> Trending Now</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Dresses</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Tops</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Outfits</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Matching Sets</a>
+                                                    <a href="#">Jumpsuits</a>
+                                                    <a href="#">Bodysuits</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Bottoms</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Jeans</a>
+                                                    <a href="#">Pants & Capris</a>
+                                                    <a href="#">Skirts</a>
+                                                    <a href="#">Shorts</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Intimates</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Bras</a>
+                                                    <a href="#">Panties</a>
+                                                    <a href="#">Shapers</a>
+                                                    <a href="#">Sleep & Lounge</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Electronics -->
                             <div class="sidebar-item">
-                                <a href="category.html?cat=Men's Clothing" class="flex items-center justify-between p-3 transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-mars text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Men's Clothing</span>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
-                                </a>
-                                <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-mars text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Browse Men's Clothing Collection</p>
-                                        <p class="text-[10px] mt-2">Shirts, Pants, Outerwear & More</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sidebar-item">
-                                <a href="category.html?cat=Toys & Games" class="flex items-center justify-between p-3 transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-gamepad text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Toys & Games</span>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
-                                </a>
-                                <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-gamepad text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Browse Toys & Games</p>
-                                        <p class="text-[10px] mt-2">Action Figures, Puzzles, Board Games</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sidebar-item">
-                                <a href="category.html?cat=Furniture" class="flex items-center justify-between p-3 transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-couch text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Furniture</span>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
-                                </a>
-                                <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-couch text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Browse Home Furniture</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sidebar-item">
-                                <a href="category.html?cat=Electronics" class="flex items-center justify-between p-3 transition-colors">
+                                <a href="category.html?cat=Electronics">
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-tv text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Electronics</span>
+                                        <span class="text-xs font-medium">Electronics</span>
                                     </div>
                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
                                 </a>
                                 <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-tv text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Browse Consumer Electronics</p>
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-bolt text-blue-500 text-xs"></i> Tech Deals</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Audio</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Smart Watch</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Home Audio</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Speakers</a>
+                                                    <a href="#">Amplifiers</a>
+                                                    <a href="#">Home Theater</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Camera & Photo</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Digital Cameras</a>
+                                                    <a href="#">Lenses</a>
+                                                    <a href="#">Tripods</a>
+                                                    <a href="#">Action Cameras</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Video Games</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Consoles</a>
+                                                    <a href="#">Gamepads</a>
+                                                    <a href="#">Accessories</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Blockchain Miner -->
                             <div class="sidebar-item">
-                                <a href="category.html?cat=Blockchain Miner" class="flex items-center justify-between p-3 transition-colors">
+                                <a href="category.html?cat=Blockchain Miner">
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-microchip text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Blockchain Miner</span>
+                                        <span class="text-xs font-medium">Blockchain Miner</span>
                                     </div>
                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
                                 </a>
                                 <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-microchip text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Blockchain Mining Hardware</p>
-                                        <p class="text-[10px] mt-2">ASIC Miners, GPU Rigs & Accessories</p>
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-link text-orange-500 text-xs"></i> Mining Gear</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">ASIC Miners</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Hardware</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">ASIC Miners</a>
+                                                    <a href="#">GPU Rigs</a>
+                                                    <a href="#">Motherboards</a>
+                                                    <a href="#">Power Supplies</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Accessories</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Riser Cards</a>
+                                                    <a href="#">Cooling Fans</a>
+                                                    <a href="#">Cables & Adapters</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Dental -->
                             <div class="sidebar-item">
-                                <a href="category.html?cat=Dental" class="flex items-center justify-between p-3 transition-colors">
+                                <a href="category.html?cat=Dental">
                                     <div class="flex items-center gap-3">
                                         <i class="fas fa-tooth text-gray-400 text-sm w-5 text-center"></i>
-                                        <span class="text-xs font-medium text-gray-700">Dental</span>
+                                        <span class="text-xs font-medium">Dental</span>
                                     </div>
                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
                                 </a>
                                 <div class="sub-menu">
-                                    <div class="py-20 text-center text-gray-400">
-                                        <i class="fas fa-tooth text-4xl mb-4 opacity-20"></i>
-                                        <p class="text-xs font-bold text-gray-600">Professional Dental Equipment</p>
-                                        <p class="text-[10px] mt-2">Tools, Supplies & Clinical Hardware</p>
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-briefcase-medical text-cyan-500 text-xs"></i> Clinical Supplies</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Dental Tools</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Instruments</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Handpieces</a>
+                                                    <a href="#">Surgical Tools</a>
+                                                    <a href="#">Orthodontics</a>
+                                                    <a href="#">Endodontics</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Lab Equipment</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Micromotors</a>
+                                                    <a href="#">Curing Lights</a>
+                                                    <a href="#">Scaling Units</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Men's Clothing -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Men's Clothing">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-mars text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Men's Clothing</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-user-tie text-blue-600 text-xs"></i> Men's Style</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Suits</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper">
+                                                        <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Shirts</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4>Top Wear</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">T-Shirts</a>
+                                                    <a href="#">Polo Shirts</a>
+                                                    <a href="#">Hoodies</a>
+                                                    <a href="#">Jackets</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Bottom Wear</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Jeans</a>
+                                                    <a href="#">Casual Pants</a>
+                                                    <a href="#">Cargo Pants</a>
+                                                    <a href="#">Shorts</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Toys & Games -->
+                             <div class="sidebar-item">
+                                 <a href="category.html?cat=Toys & Games">
+                                     <div class="flex items-center gap-3">
+                                         <i class="fas fa-gamepad text-gray-400 text-sm w-5 text-center"></i>
+                                         <span class="text-xs font-medium">Toys & Games</span>
+                                     </div>
+                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                 </a>
+                                 <div class="sub-menu">
+                                     <div class="grid grid-cols-1 gap-8">
+                                         <div>
+                                             <h3><i class="fas fa-puzzle-piece text-purple-500 text-xs"></i> Fun & Games</h3>
+                                             <div class="grid grid-cols-6 gap-4">
+                                                 <div class="rec-item text-center">
+                                                     <div class="rec-img-wrapper">
+                                                         <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
+                                                     </div>
+                                                     <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Action Figures</p>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="grid grid-cols-4 gap-8">
+                                             <div>
+                                                 <h4>Outdoor</h4>
+                                                 <div class="sub-link-list">
+                                                     <a href="#">Drones</a>
+                                                     <a href="#">RC Cars</a>
+                                                     <a href="#">Sports Toys</a>
+                                                 </div>
+                                             </div>
+                                             <div>
+                                                 <h4>Educational</h4>
+                                                 <div class="sub-link-list">
+                                                     <a href="#">Puzzles</a>
+                                                     <a href="#">Building Blocks</a>
+                                                     <a href="#">Science Kits</a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Furniture -->
+                             <div class="sidebar-item">
+                                 <a href="category.html?cat=Furniture">
+                                     <div class="flex items-center gap-3">
+                                         <i class="fas fa-couch text-gray-400 text-sm w-5 text-center"></i>
+                                         <span class="text-xs font-medium">Furniture</span>
+                                     </div>
+                                     <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                 </a>
+                                 <div class="sub-menu">
+                                     <div class="grid grid-cols-1 gap-8">
+                                         <div>
+                                             <h3><i class="fas fa-home text-green-600 text-xs"></i> Home Living</h3>
+                                             <div class="grid grid-cols-6 gap-4">
+                                                 <div class="rec-item text-center">
+                                                     <div class="rec-img-wrapper">
+                                                         <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full">
+                                                     </div>
+                                                     <p class="text-[10px] text-gray-500 mt-2 line-clamp-1">Sofas</p>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="grid grid-cols-4 gap-8">
+                                             <div>
+                                                 <h4>Living Room</h4>
+                                                 <div class="sub-link-list">
+                                                     <a href="#">Coffee Tables</a>
+                                                     <a href="#">TV Stands</a>
+                                                     <a href="#">Recliners</a>
+                                                 </div>
+                                             </div>
+                                             <div>
+                                                 <h4>Bedroom</h4>
+                                                 <div class="sub-link-list">
+                                                     <a href="#">Beds</a>
+                                                     <a href="#">Mattresses</a>
+                                                     <a href="#">Wardrobes</a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -449,27 +815,46 @@
                 <a href="category.html?cat=Automotive" class="hover:text-red-500">Automotive</a>
                 <a href="category.html?cat=Appliances" class="hover:text-red-500">Appliances</a>
                 <div class="relative group">
-                    <button class="flex items-center gap-1 cursor-pointer hover:text-red-500 py-2">
+                    <button class="flex items-center gap-1.5 cursor-pointer hover:text-red-500 py-2.5 transition-colors font-medium">
                         <span>More</span>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
+                        <i class="fas fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform duration-300"></i>
                     </button>
                     <!-- More Dropdown -->
-                    <div class="absolute top-full left-0 w-64 bg-white shadow-xl border rounded-xl py-4 hidden group-hover:block z-[100]">
-                        <div class="grid grid-cols-1 gap-1 px-2">
-                            <a href="category.html?cat=Women's Fashion" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Women's Fashion</a>
-                            <a href="category.html?cat=Men's Clothing" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Men's Clothing</a>
-                            <a href="category.html?cat=Toys & Games" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Toys & Games</a>
-                            <a href="category.html?cat=Furniture" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Furniture</a>
-                            <a href="category.html?cat=Beauty & Health" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Beauty & Health</a>
-                            <a href="category.html?cat=Shoes" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Shoes</a>
-                            <a href="category.html?cat=Hair Extensions & Wigs" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Hair Extensions & Wigs</a>
-                            <a href="category.html?cat=Pet Supplies" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Pet Supplies</a>
-                            <a href="category.html?cat=Cell Phones & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Cell Phones & Accessories</a>
-                            <a href="category.html?cat=Electronics" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Electronics</a>
-                            <a href="category.html?cat=Jewelry & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Jewelry & Accessories</a>
-                            <a href="category.html?cat=Home & Garden" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Home & Garden</a>
-                            <a href="category.html?cat=Blockchain Miner" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Blockchain Miner</a>
-                            <a href="category.html?cat=Dental" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Dental</a>
+                    <div class="absolute top-full left-0 w-64 bg-white shadow-2xl border border-gray-100 rounded-2xl py-3 hidden group-hover:block z-[100] animate-megaSlideIn mt-1">
+                        <div class="grid grid-cols-1 gap-0.5 px-2">
+                            <p class="text-[10px] font-bold text-gray-400 px-4 py-2 uppercase tracking-wider">More Categories</p>
+                            <a href="category.html?cat=Women's Fashion" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-venus text-gray-300 w-4 text-center"></i>
+                                <span>Women's Fashion</span>
+                            </a>
+                            <a href="category.html?cat=Men's Clothing" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-mars text-gray-300 w-4 text-center"></i>
+                                <span>Men's Clothing</span>
+                            </a>
+                            <a href="category.html?cat=Toys & Games" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-gamepad text-gray-300 w-4 text-center"></i>
+                                <span>Toys & Games</span>
+                            </a>
+                            <a href="category.html?cat=Furniture" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-couch text-gray-300 w-4 text-center"></i>
+                                <span>Furniture</span>
+                            </a>
+                            <a href="category.html?cat=Beauty & Health" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-heart text-gray-300 w-4 text-center"></i>
+                                <span>Beauty & Health</span>
+                            </a>
+                            <a href="category.html?cat=Shoes" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-shoe-prints text-gray-300 w-4 text-center"></i>
+                                <span>Shoes</span>
+                            </a>
+                            <a href="category.html?cat=Blockchain Miner" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors font-bold">
+                                <i class="fas fa-microchip text-red-400 w-4 text-center"></i>
+                                <span>Blockchain Miner</span>
+                            </a>
+                            <a href="category.html?cat=Dental" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors font-bold">
+                                <i class="fas fa-tooth text-red-400 w-4 text-center"></i>
+                                <span>Dental</span>
+                            </a>
                         </div>
                     </div>
                 </div>
