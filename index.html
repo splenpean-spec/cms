@@ -43,6 +43,67 @@
         .product-card:hover img {
             transform: scale(1.05);
         }
+
+        /* Mega Menu Styles */
+        .mega-menu-container {
+            width: 900px !important;
+            min-height: 500px;
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border-radius: 1.5rem;
+            z-index: 110;
+            margin-top: 0.25rem;
+            overflow: visible; /* Changed from hidden to show sub-menus */
+        }
+
+        .group:hover .mega-menu-container {
+            display: flex;
+        }
+
+        .category-sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #f3f4f6;
+            padding: 1rem 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar-item {
+            position: static; /* Important for absolute positioning of sub-menu relative to mega-menu-container */
+        }
+
+        .sidebar-item .sub-menu {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 240px;
+            width: 660px;
+            height: 100%;
+            background: white;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            border-radius: 0 1.5rem 1.5rem 0;
+        }
+
+        .sidebar-item:hover {
+            background-color: #fef2f2;
+        }
+
+        .sidebar-item:hover .sub-menu {
+            display: block;
+        }
+
+        .sidebar-item:hover > a span {
+            color: #FF4747;
+        }
+
+        .sidebar-item:hover > a i {
+            color: #FF4747;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -136,108 +197,249 @@
                         <i class="fas fa-bars"></i>
                         <span>All Categories</span>
                     </button>
-                    <!-- Categories Dropdown (Sidebar style) -->
-                    <div class="absolute top-full left-0 w-64 bg-white shadow-2xl border border-gray-100 rounded-2xl py-4 hidden group-hover:block z-[110] mt-1">
-                        <nav class="space-y-0.5 px-2">
-                            <a href="category.html?cat=Automotive" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-car text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Automotive</span>
+                    <!-- Categories Dropdown (Mega Menu style) -->
+                    <div class="mega-menu-container">
+                        <div class="category-sidebar">
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Automotive" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-car text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Automotive</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <!-- Automotive Sub-menu -->
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <!-- Recommended -->
+                                        <div>
+                                            <h3 class="font-bold text-sm mb-4">Recommended</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Spoilers & Wings</p>
+                                                </div>
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Wheels & Tires</p>
+                                                </div>
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Gauges & Monitors</p>
+                                                </div>
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Keys & Remote...</p>
+                                                </div>
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Styling & Body Parts</p>
+                                                </div>
+                                                <div class="text-center group/sub">
+                                                    <div class="aspect-square bg-gray-50 rounded-lg mb-2 flex items-center justify-center p-2 border border-transparent group-hover/sub:border-red-200">
+                                                        <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full">
+                                                    </div>
+                                                    <p class="text-[10px] text-gray-600 line-clamp-2">Car Wraps...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Shop By Brand -->
+                                        <div>
+                                            <h3 class="font-bold text-sm mb-4">Shop By Brand</h3>
+                                            <div class="grid grid-cols-7 gap-4">
+                                                <img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/S8407883d648b4b79b5b64b1f6e804a60Y.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                                <img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg" class="h-8 object-contain border p-1 rounded hover:border-red-500 transition-colors">
+                                            </div>
+                                        </div>
+
+                                        <!-- Grid Subcategories -->
+                                        <div class="grid grid-cols-4 gap-8">
+                                            <div>
+                                                <h4 class="font-bold text-xs mb-3">Car Electronics</h4>
+                                                <ul class="space-y-2 text-[10px] text-gray-500">
+                                                    <li><a href="#" class="hover:text-red-500">Keys & Remote Systems</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Gauges & Monitors</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Smart Driving Systems</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Driving Simulators</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-xs mb-3">Apparel & Racing Gear</h4>
+                                                <ul class="space-y-2 text-[10px] text-gray-500">
+                                                    <li><a href="#" class="hover:text-red-500">Professional Racing Ap...</a></li>
+                                                </ul>
+                                                <h4 class="font-bold text-xs mt-4 mb-3">Car Lights</h4>
+                                                <ul class="space-y-2 text-[10px] text-gray-500">
+                                                    <li><a href="#" class="hover:text-red-500">Headlight Assemblies</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Decorative & Custom Li...</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-xs mb-3">Car Care</h4>
+                                                <ul class="space-y-2 text-[10px] text-gray-500">
+                                                    <li><a href="#" class="hover:text-red-500">Car Protection</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Paint & Rim Care</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Cleaning Agents</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Cleaning Tools</a></li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-xs mb-3">Exterior Accessories</h4>
+                                                <ul class="space-y-2 text-[10px] text-gray-500">
+                                                    <li><a href="#" class="hover:text-red-500">Car Wraps, Stickers & Fi...</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Safety & Awareness</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Weather Protection</a></li>
+                                                    <li><a href="#" class="hover:text-red-500">Styling & Body Parts</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Appliances" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-blender text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Appliances</span>
+                            </div>
+
+                            <!-- Other Categories (Placeholders) -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Appliances" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-blender text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Appliances</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-blender text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs">Browse Appliances Collection</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-venus text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Women's Clothing</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-venus text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Women's Clothing</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-venus text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Browse Women's Fashion Collection</p>
+                                        <p class="text-[10px] mt-2">Dresses, Tops, Accessories & More</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Men's Clothing" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-mars text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Men's Clothing</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Men's Clothing" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-mars text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Men's Clothing</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-mars text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Browse Men's Clothing Collection</p>
+                                        <p class="text-[10px] mt-2">Shirts, Pants, Outerwear & More</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Toys & Games" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-gamepad text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Toys & Games</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Toys & Games" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-gamepad text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Toys & Games</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-gamepad text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Browse Toys & Games</p>
+                                        <p class="text-[10px] mt-2">Action Figures, Puzzles, Board Games</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Furniture" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-couch text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Furniture</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Furniture" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-couch text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Furniture</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-couch text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Browse Home Furniture</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Beauty & Health" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-magic text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Beauty & Health</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Electronics" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-tv text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Electronics</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-tv text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Browse Consumer Electronics</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Shoes" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-shoe-prints text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Shoes</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Blockchain Miner" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-microchip text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Blockchain Miner</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-microchip text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Blockchain Mining Hardware</p>
+                                        <p class="text-[10px] mt-2">ASIC Miners, GPU Rigs & Accessories</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Hair Extensions & Wigs" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-cut text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Hair Extensions & Wigs</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Dental" class="flex items-center justify-between p-3 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-tooth text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium text-gray-700">Dental</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="py-20 text-center text-gray-400">
+                                        <i class="fas fa-tooth text-4xl mb-4 opacity-20"></i>
+                                        <p class="text-xs font-bold text-gray-600">Professional Dental Equipment</p>
+                                        <p class="text-[10px] mt-2">Tools, Supplies & Clinical Hardware</p>
+                                    </div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Pet Supplies" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-paw text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Pet Supplies</span>
-                                </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Cell Phones & Accessories" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-mobile-alt text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Cell Phones & Accessories</span>
-                                </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Electronics" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-tv text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Electronics</span>
-                                </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Jewelry & Accessories" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-gem text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Jewelry & Accessories</span>
-                                </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                            <a href="category.html?cat=Home & Garden" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-leaf text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
-                                    <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Home & Garden</span>
-                                </div>
-                                <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                            </a>
-                        </nav>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <a href="category.html?cat=bundle deals" class="text-[#FF4747] hover:underline font-bold">Bundle deals</a>
@@ -266,6 +468,8 @@
                             <a href="category.html?cat=Electronics" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Electronics</a>
                             <a href="category.html?cat=Jewelry & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Jewelry & Accessories</a>
                             <a href="category.html?cat=Home & Garden" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Home & Garden</a>
+                            <a href="category.html?cat=Blockchain Miner" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Blockchain Miner</a>
+                            <a href="category.html?cat=Dental" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Dental</a>
                         </div>
                     </div>
                 </div>
@@ -274,83 +478,115 @@
     </header>
 
     <main class="container mx-auto px-4 py-6">
-        <!-- Hero Section with Banner Carousel -->
-        <div class="mb-12">
-            <div class="relative w-full overflow-hidden rounded-2xl group shadow-lg">
-                <!-- Carousel Container -->
-                <div id="heroCarousel" class="flex transition-transform duration-500 ease-in-out">
-                    <!-- Slide 1: Welcome Deal (Orange) -->
-                    <div class="w-full flex-shrink-0 relative aspect-[21/9] md:aspect-[25/7] bg-[#FF4700]">
-                        <div class="absolute inset-0 flex items-center px-12 text-white">
-                            <div class="max-w-md">
-                                <p class="text-sm font-medium mb-1">Ends: May 23, 07:59 (GMT+1)</p>
-                                <h1 class="text-4xl md:text-5xl font-black mb-4 italic tracking-tight">48 hours left <i class="fas fa-chevron-circle-right text-3xl"></i></h1>
-                                <div class="flex gap-4">
-                                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20">
-                                        <p class="text-[10px] uppercase font-bold text-white/80">Code: AESS02</p>
-                                        <p class="text-xs font-bold mt-1 text-white">NGN3,013.76 OFF</p>
+        <!-- Hero Section: Carousel + Welcome Box -->
+        <div class="flex flex-col lg:flex-row gap-6 mb-12">
+            <!-- Carousel Container -->
+            <div class="flex-grow">
+                <div class="relative w-full overflow-hidden rounded-2xl group shadow-lg">
+                    <!-- Carousel Container -->
+                    <div id="heroCarousel" class="flex transition-transform duration-500 ease-in-out">
+                        <!-- Slide 1: Welcome Deal (Orange) -->
+                        <div class="w-full flex-shrink-0 relative aspect-[21/9] md:aspect-[25/9] bg-[#FF4700]">
+                            <div class="absolute inset-0 flex items-center px-6 md:px-12 text-white">
+                                <div class="max-w-md">
+                                    <p class="text-[10px] md:text-sm font-medium mb-1 opacity-90">Ends: May 23, 07:59 (GMT+1)</p>
+                                    <h1 class="text-2xl md:text-5xl font-black mb-4 italic tracking-tight flex items-center gap-2">48 hours left <i class="fas fa-chevron-circle-right text-xl md:text-3xl"></i></h1>
+                                    <div class="flex gap-2 md:gap-4 scale-75 md:scale-100 origin-left">
+                                        <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20">
+                                            <p class="text-[8px] uppercase font-bold text-white/70">Code: AESS02</p>
+                                            <p class="text-[10px] font-bold mt-1 text-white">NGN3,013.76 OFF</p>
+                                        </div>
+                                        <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 flex items-center gap-3">
+                                            <div class="w-8 h-8 bg-gray-100/20 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-bolt text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-[8px] font-bold text-white/70 uppercase">Top deals</p>
+                                                <p class="text-[10px] font-black">NGN1,491.81</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/20 flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-gray-100 rounded-lg"></div>
-                                        <div>
-                                            <p class="text-[10px] font-bold">Top deals</p>
-                                            <p class="text-xs font-black">NGN1,491.81</p>
+                                </div>
+                            </div>
+                            <!-- Right Side Image (Floating Dress) -->
+                            <div class="absolute right-0 top-0 h-full w-1/2 overflow-hidden pointer-events-none">
+                                <img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="absolute right-4 md:right-12 bottom-0 h-[120%] object-contain object-bottom transform rotate-6 scale-110 drop-shadow-2xl">
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Smart Watch (Light Blue) -->
+                        <div class="w-full flex-shrink-0 relative aspect-[21/9] md:aspect-[25/9] bg-[#E8F1FF]">
+                            <div class="absolute inset-0 flex items-center px-6 md:px-12">
+                                <div class="max-w-md">
+                                    <h1 class="text-3xl md:text-5xl font-black mb-1 md:mb-2 text-gray-900">Smart watch</h1>
+                                    <p class="text-sm md:text-lg text-gray-600 mb-4 md:mb-8 font-medium">Health & style combined</p>
+                                    <button class="bg-black text-white px-6 md:px-10 py-2 md:py-3 rounded-full font-bold hover:bg-gray-800 transition-all transform hover:scale-105 shadow-lg text-sm md:text-base">Shop now</button>
+                                </div>
+                            </div>
+                            <!-- Floating Products -->
+                            <div class="absolute right-0 top-0 h-full w-1/2 flex items-center justify-center gap-2 md:gap-8 px-4 md:px-12">
+                                <div class="relative transform -rotate-6 hover:rotate-0 transition-transform duration-500 scale-75 md:scale-100">
+                                    <div class="bg-white p-2 rounded-2xl shadow-2xl border-4 border-white overflow-hidden group/item">
+                                        <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="w-24 h-24 md:w-48 md:h-48 object-cover rounded-xl transition-transform group-hover/item:scale-110">
+                                        <div class="bg-black/5 rounded-lg mt-2 py-1">
+                                            <p class="text-[10px] font-bold text-center">NGN2,767.28</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative transform rotate-6 hover:rotate-0 transition-transform duration-500 mt-8 md:mt-16 scale-75 md:scale-100">
+                                    <div class="bg-white p-2 rounded-2xl shadow-2xl border-4 border-white overflow-hidden group/item">
+                                        <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="w-24 h-24 md:w-48 md:h-48 object-cover rounded-xl transition-transform group-hover/item:scale-110">
+                                        <div class="bg-black/5 rounded-lg mt-2 py-1">
+                                            <p class="text-[10px] font-bold text-center">NGN1,491.81</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Abstract Elements -->
-                        <div class="absolute right-0 top-0 h-full w-1/2 overflow-hidden pointer-events-none">
-                            <div class="absolute right-12 bottom-0 w-80 h-full bg-[url('https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg')] bg-no-repeat bg-contain bg-bottom mix-blend-screen opacity-90"></div>
-                        </div>
                     </div>
-                    <!-- Slide 2: Smart Watch (Light Blue) -->
-                    <div class="w-full flex-shrink-0 relative aspect-[21/9] md:aspect-[25/7] bg-[#E8F1FF]">
-                        <div class="absolute inset-0 flex items-center px-12">
-                            <div class="max-w-md">
-                                <h1 class="text-4xl md:text-5xl font-black mb-2 text-gray-900">Smart watch</h1>
-                                <p class="text-lg text-gray-600 mb-6">Health & style combined</p>
-                                <button class="bg-black text-white px-8 py-3 rounded-full font-bold hover:bg-gray-800 transition-colors">Shop now</button>
-                            </div>
-                        </div>
-                        <!-- Product Float Elements -->
-                        <div class="absolute right-0 top-0 h-full w-1/2 flex items-center justify-center gap-4 px-12">
-                            <div class="relative transform -rotate-6 hover:rotate-0 transition-transform duration-500">
-                                <div class="bg-white p-2 rounded-xl shadow-2xl border-4 border-white">
-                                    <img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="w-32 h-32 md:w-48 md:h-48 object-cover rounded-lg">
-                                    <p class="text-xs font-bold mt-2 text-center">NGN2,767.28</p>
-                                </div>
-                            </div>
-                            <div class="relative transform rotate-6 hover:rotate-0 transition-transform duration-500 mt-12">
-                                <div class="bg-white p-2 rounded-xl shadow-2xl border-4 border-white">
-                                    <img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="w-32 h-32 md:w-48 md:h-48 object-cover rounded-lg">
-                                    <p class="text-xs font-bold mt-2 text-center">NGN1,491.81</p>
-                                </div>
-                            </div>
-                        </div>
+
+                    <!-- Carousel Controls -->
+                    <button onclick="moveCarousel(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/30 hover:bg-white/50 backdrop-blur-md text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button onclick="moveCarousel(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/30 hover:bg-white/50 backdrop-blur-md text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <!-- Carousel Indicators -->
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                        <div onclick="setCarousel(0)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 cursor-pointer hover:bg-white transition-all active-dot"></div>
+                        <div onclick="setCarousel(1)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 cursor-pointer hover:bg-white transition-all"></div>
                     </div>
                 </div>
-
-                <!-- Controls -->
-                <button onclick="moveCarousel(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button onclick="moveCarousel(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-
-                <!-- Indicators -->
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                    <div onclick="setCarousel(0)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 cursor-pointer hover:bg-white active-dot"></div>
-                    <div onclick="setCarousel(1)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 cursor-pointer hover:bg-white"></div>
+                <!-- Carousel Security Badge -->
+                <div class="flex items-center justify-center gap-2 mt-4 text-[10px] text-gray-400">
+                    <i class="fas fa-shield-alt text-red-400"></i>
+                    <span class="font-medium"><span class="text-red-400">Security & Privacy</span> secure personal details</span>
                 </div>
             </div>
 
-            <!-- Trust Badge -->
-            <div class="flex items-center justify-center gap-2 mt-4 text-[10px] text-gray-400">
-                <i class="fas fa-shield-alt text-red-400"></i>
-                <span class="font-medium"><span class="text-red-400">Security & Privacy</span> secure personal details</span>
+            <!-- Welcome/User Section -->
+            <div class="hidden lg:block w-72 space-y-4 flex-shrink-0">
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-1">Welcome to AliExpress</h3>
+                    <p class="text-[10px] text-gray-400 mb-6">Join us for more savings and exclusive deals!</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="bg-black text-white text-[10px] font-bold py-2.5 rounded-full hover:bg-gray-800 transition-colors shadow-sm">Join</button>
+                        <button class="bg-gray-100 text-black text-[10px] font-bold py-2.5 rounded-full hover:bg-gray-200 transition-colors">Sign in</button>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-[#FF4747] to-[#FF8C47] rounded-3xl shadow-lg p-8 text-white overflow-hidden relative group cursor-pointer">
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-bold uppercase opacity-90 mb-1 tracking-wider">Welcome Deal</p>
+                        <h3 class="text-xl font-black mb-6 leading-tight">Your first item<br>from US $0.01</h3>
+                        <a href="category.html?cat=deals" class="inline-block bg-white text-red-500 text-[10px] font-bold px-6 py-2.5 rounded-full hover:bg-red-50 transition-all shadow-md transform hover:translate-x-1">Get it now</a>
+                    </div>
+                    <i class="fas fa-gift absolute -bottom-6 -right-6 text-9xl opacity-10 rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-transform duration-500"></i>
+                </div>
             </div>
         </div>
 
@@ -362,10 +598,13 @@
             function updateCarousel() {
                 carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
                 dots.forEach((dot, i) => {
-                    dot.classList.toggle('bg-white', i === currentSlide);
-                    dot.classList.toggle('bg-white/50', i !== currentSlide);
-                    dot.classList.toggle('w-4', i === currentSlide);
-                    dot.classList.toggle('w-2', i !== currentSlide);
+                    if (i === currentSlide) {
+                        dot.classList.add('active-dot');
+                        dot.classList.remove('bg-white/50');
+                    } else {
+                        dot.classList.remove('active-dot');
+                        dot.classList.add('bg-white/50');
+                    }
                 });
             }
 
@@ -380,50 +619,16 @@
             }
 
             // Auto-rotate
-            setInterval(() => moveCarousel(1), 5000);
-            updateCarousel(); // Initial state
+            let carouselInterval = setInterval(() => moveCarousel(1), 5000);
+
+            // Pause on hover
+            carousel.parentElement.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+            carousel.parentElement.addEventListener('mouseleave', () => {
+                carouselInterval = setInterval(() => moveCarousel(1), 5000);
+            });
+
+            updateCarousel();
         </script>
-
-            <!-- Hero Banner -->
-            <div class="flex-grow">
-                <div class="relative h-[300px] md:h-[400px] bg-gray-200 rounded-3xl overflow-hidden shadow-sm group">
-                    <img src="https://ae01.alicdn.com/kf/S7e19395f87744383a8f5984407987e38N.jpg" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex flex-col justify-center px-8 md:px-12 text-white">
-                        <h2 class="text-3xl md:text-5xl font-black italic mb-4 tracking-tighter uppercase">Big Deals on<br>New Tech</h2>
-                        <p class="text-sm md:text-base font-medium mb-6 max-w-md">Upgrade your home with the latest smart appliances and consumer electronics. Limited time offer!</p>
-                        <a href="category.html?cat=all" class="bg-white text-black font-bold px-8 py-3 rounded-full w-fit hover:bg-red-500 hover:text-white transition-all shadow-lg">Shop Now</a>
-                    </div>
-                    <!-- Navigation Dots -->
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                        <div class="w-2 h-2 rounded-full bg-white shadow-sm"></div>
-                        <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm"></div>
-                        <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Welcome/User Section -->
-            <div class="hidden xl:block w-64 space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
-                    <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-user text-2xl text-gray-400"></i>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">Welcome to AliExpress</h3>
-                    <p class="text-[10px] text-gray-400 mb-6">Join us for more savings and exclusive deals!</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="bg-black text-white text-[10px] font-bold py-2 rounded-full hover:bg-gray-800 transition-colors">Join</button>
-                        <button class="bg-gray-100 text-black text-[10px] font-bold py-2 rounded-full hover:bg-gray-200 transition-colors">Sign in</button>
-                    </div>
-                </div>
-                <div class="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl shadow-sm p-6 text-white overflow-hidden relative group">
-                    <div class="relative z-10">
-                        <p class="text-[10px] font-bold uppercase opacity-80 mb-1">Welcome Deal</p>
-                        <h3 class="text-lg font-bold mb-4 leading-tight">Your first item<br>from $0.01</h3>
-                        <a href="category.html?cat=deals" class="inline-block bg-white text-red-500 text-[10px] font-bold px-4 py-2 rounded-full hover:bg-red-50 transition-colors shadow-md">Get it now</a>
-                    </div>
-                    <i class="fas fa-gift absolute -bottom-4 -right-4 text-8xl opacity-10 rotate-12 group-hover:scale-110 transition-transform"></i>
-                </div>
-            </div>
         </div>
 
         <!-- Today's Deals Section -->
