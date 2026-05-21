@@ -131,18 +131,35 @@
         <!-- Navigation Categories -->
         <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide hidden md:block">
             <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
-                <a href="category.html?cat=all" class="hover:text-red-500">SuperDeals</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Choice</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">AliExpress Business</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Home & Garden</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Hair & Wigs</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Men's Clothing</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Accessories</a>
-                <a href="category.html?cat=all" class="hover:text-red-500">Consumer Electronics</a>
-                <a href="category.html?cat=all" class="flex items-center gap-1 cursor-pointer hover:text-red-500">
-                    <span>More</span>
-                    <i class="fas fa-chevron-down text-[10px]"></i>
-                </a>
+                <a href="category.html?cat=bundle deals" class="text-[#FF4747] hover:underline font-bold">Bundle deals</a>
+                <a href="category.html?cat=choice" class="hover:text-red-500">Choice</a>
+                <a href="category.html?cat=superdeals" class="hover:text-red-500">SuperDeals</a>
+                <a href="category.html?cat=aliexpress business" class="hover:text-red-500">AliExpress Business</a>
+                <a href="category.html?cat=Automotive" class="hover:text-red-500">Automotive</a>
+                <a href="category.html?cat=Appliances" class="hover:text-red-500">Appliances</a>
+                <div class="relative group">
+                    <button class="flex items-center gap-1 cursor-pointer hover:text-red-500 py-2">
+                        <span>More</span>
+                        <i class="fas fa-chevron-down text-[10px]"></i>
+                    </button>
+                    <!-- More Dropdown -->
+                    <div class="absolute top-full left-0 w-64 bg-white shadow-xl border rounded-xl py-4 hidden group-hover:block z-[100]">
+                        <div class="grid grid-cols-1 gap-1 px-2">
+                            <a href="category.html?cat=Women's Fashion" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Women's Fashion</a>
+                            <a href="category.html?cat=Men's Clothing" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Men's Clothing</a>
+                            <a href="category.html?cat=Toys & Games" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Toys & Games</a>
+                            <a href="category.html?cat=Furniture" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Furniture</a>
+                            <a href="category.html?cat=Beauty & Health" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Beauty & Health</a>
+                            <a href="category.html?cat=Shoes" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Shoes</a>
+                            <a href="category.html?cat=Hair Extensions & Wigs" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Hair Extensions & Wigs</a>
+                            <a href="category.html?cat=Pet Supplies" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Pet Supplies</a>
+                            <a href="category.html?cat=Cell Phones & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Cell Phones & Accessories</a>
+                            <a href="category.html?cat=Electronics" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Electronics</a>
+                            <a href="category.html?cat=Jewelry & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Jewelry & Accessories</a>
+                            <a href="category.html?cat=Home & Garden" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Home & Garden</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -153,90 +170,104 @@
             <!-- Categories Sidebar -->
             <aside class="hidden lg:block w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex-shrink-0">
                 <h2 class="font-bold text-base mb-4 flex items-center gap-2">
-                    <i class="fas fa-list text-xs"></i> Categories
+                    <i class="fas fa-list text-xs"></i> All Categories
                 </h2>
-                <nav class="space-y-1">
+                <nav class="space-y-0.5">
+                    <a href="category.html?cat=Automotive" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-car text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Automotive</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Appliances" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-blender text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Appliances</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
                     <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-venus text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Women's Fashion</span>
+                            <i class="fas fa-venus text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Women's Clothing</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
-                    <a href="category.html?cat=Men's Fashion" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                    <a href="category.html?cat=Men's Clothing" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-mars text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Men's Fashion</span>
+                            <i class="fas fa-mars text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Men's Clothing</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
-                    <a href="category.html?cat=Phones & Telecommunications" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                    <a href="category.html?cat=Toys & Games" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-mobile-alt text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Phones & Telecom</span>
+                            <i class="fas fa-gamepad text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Toys & Games</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
-                    <a href="category.html?cat=Computer, Office & Security" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                    <a href="category.html?cat=Furniture" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-laptop text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Computer & Office</span>
+                            <i class="fas fa-couch text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Furniture</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
-                    <a href="category.html?cat=Consumer Electronics" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                    <a href="category.html?cat=Beauty & Health" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-tv text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Electronics</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Jewelry & Watches" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-gem text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Jewelry & Watches</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Home, Pet & Appliances" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-home text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Home & Appliances</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Bags & Shoes" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-shopping-bag text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Bags & Shoes</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Toys, Kids & Babies" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-child text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Toys & Kids</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Outdoor Fun & Sports" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-running text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Sports & Outdoor</span>
-                        </div>
-                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
-                    </a>
-                    <a href="category.html?cat=Beauty, Health & Hair" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-heart text-gray-400 group-hover:text-red-500 text-sm"></i>
+                            <i class="fas fa-magic text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
                             <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Beauty & Health</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
-                    <a href="category.html?cat=Automobiles & Motorcycles" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                    <a href="category.html?cat=Shoes" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
                         <div class="flex items-center gap-3">
-                            <i class="fas fa-car text-gray-400 group-hover:text-red-500 text-sm"></i>
-                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Automotive</span>
+                            <i class="fas fa-shoe-prints text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Shoes</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Hair Extensions & Wigs" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-cut text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Hair Extensions & Wigs</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Pet Supplies" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-paw text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Pet Supplies</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Cell Phones & Accessories" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-mobile-alt text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Cell Phones & Accessories</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Electronics" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-tv text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Electronics</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Jewelry & Accessories" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-gem text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Jewelry & Accessories</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
+                    </a>
+                    <a href="category.html?cat=Home & Garden" class="flex items-center justify-between group p-2 hover:bg-red-50 rounded-xl transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-leaf text-gray-400 group-hover:text-red-500 text-sm w-5 text-center"></i>
+                            <span class="text-xs font-medium text-gray-700 group-hover:text-red-600">Home & Garden</span>
                         </div>
                         <i class="fas fa-chevron-right text-[8px] text-gray-300 group-hover:text-red-400"></i>
                     </a>
@@ -383,70 +414,84 @@
                 <!-- Products will be loaded here via JS -->
             </div>
 
+            <div id="staticProducts" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Static content kept as fallback -->
+                <!-- ... existing static product cards ... -->
+            </div>
+
             <script>
                 async function loadProducts() {
+                    const container = document.getElementById('dynamicProducts');
+                    const staticGrid = document.getElementById('staticProducts');
+                    
                     try {
                         const res = await fetch('/api/products');
+                        if (!res.ok) throw new Error('API request failed');
                         const products = await res.json();
-                        const container = document.getElementById('dynamicProducts');
                         
-                        if (products && products.length > 0) {
-                            const staticGrid = container.nextElementSibling;
+                        if (products && Array.isArray(products) && products.length > 0) {
                             if (staticGrid) staticGrid.style.display = 'none';
-                            container.innerHTML = products.map(p => `
-                                <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
-                                    <a href="item.html?id=${p.id}" class="block flex flex-col flex-grow">
-                                        <div class="relative group">
-                                            <img src="${p.image}" alt="${p.name}" class="w-full aspect-square object-cover" onerror="this.src='https://via.placeholder.com/350x350?text=Product+Image'">
-                                            <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
-                                                <i class="fas fa-shopping-cart text-xs"></i>
-                                            </div>
-                                            <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
-                                        </div>
-                                        <div class="p-3 flex flex-col flex-grow">
-                                            <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">${p.name}</h3>
-                                            <div class="flex items-center gap-1 mb-1">
-                                                <i class="fas fa-star text-black text-[8px]"></i>
-                                                <i class="fas fa-star text-black text-[8px]"></i>
-                                                <i class="fas fa-star text-black text-[8px]"></i>
-                                                <i class="fas fa-star text-black text-[8px]"></i>
-                                                <i class="fas fa-star text-black text-[8px]"></i>
-                                                <span class="text-[10px] text-gray-400 ml-1">${p.soldCount || '100'}+ sold</span>
-                                            </div>
-                                            <div class="mt-auto">
-                                                <div class="flex items-baseline gap-1">
-                                                     <span class="text-sm font-bold">$</span>
-                                                     <span class="text-xl font-bold">${p.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                                                 </div>
-                                                <div class="flex items-center justify-between mt-1">
-                                                    <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
-                                                    ${p.category ? `
-                                                    <a href="category.html?cat=${p.category.toLowerCase()}" class="text-[10px] text-gray-400 hover:text-red-500 hover:underline">
-                                                        ${p.category}
-                                                    </a>
-                                                    ` : ''}
+                            container.innerHTML = products.map(p => {
+                                const price = typeof p.price === 'number' ? p.price : parseFloat(p.price || 0);
+                                return `
+                                    <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
+                                        <a href="item.html?id=${p.id}" class="block flex flex-col flex-grow">
+                                            <div class="relative group">
+                                                <img src="${p.image || 'https://via.placeholder.com/350x350?text=No+Image'}" alt="${p.name}" class="w-full aspect-square object-cover" onerror="this.src='https://via.placeholder.com/350x350?text=Product+Image'">
+                                                <div class="cart-btn absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md">
+                                                    <i class="fas fa-shopping-cart text-xs"></i>
                                                 </div>
-                                                <div class="mt-1 text-[10px] ${p.quantity > 0 ? 'text-green-600' : 'text-red-600'} font-bold">
-                                                    ${p.quantity > 0 ? `${p.quantity} in stock` : 'Out of stock'}
+                                                <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">Choice</div>
+                                            </div>
+                                            <div class="p-3 flex flex-col flex-grow">
+                                                <h3 class="text-xs text-gray-700 line-clamp-2 mb-2 leading-tight">${p.name || 'Untitled Product'}</h3>
+                                                <div class="flex items-center gap-1 mb-1">
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <i class="fas fa-star text-black text-[8px]"></i>
+                                                    <span class="text-[10px] text-gray-400 ml-1">${p.soldCount || '100'}+ sold</span>
+                                                </div>
+                                                <div class="mt-auto">
+                                                    <div class="flex items-baseline gap-1">
+                                                         <span class="text-sm font-bold">$</span>
+                                                         <span class="text-xl font-bold">${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                                     </div>
+                                                    <div class="flex items-center justify-between mt-1">
+                                                        <span class="text-[10px] text-pink-600 border border-pink-600 px-1 rounded">Welcome deal</span>
+                                                        ${p.category ? `
+                                                        <span class="text-[10px] text-gray-400">
+                                                            ${p.category}
+                                                        </span>
+                                                        ` : ''}
+                                                    </div>
+                                                    <div class="mt-1 text-[10px] ${p.quantity > 0 ? 'text-green-600' : 'text-red-600'} font-bold">
+                                                        ${p.quantity > 0 ? `${p.quantity} in stock` : 'Out of stock'}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            `).join('');
+                                        </a>
+                                    </div>
+                                `;
+                            }).join('');
                         } else {
-                            container.style.display = 'none';
+                            if (container) container.style.display = 'none';
+                            if (staticGrid) staticGrid.style.display = 'grid';
                         }
                     } catch (e) {
-                        console.log('Failed to load products from API, showing static content');
-                        const container = document.getElementById('dynamicProducts');
+                        console.error('Failed to load products:', e);
                         if (container) container.style.display = 'none';
+                        if (staticGrid) staticGrid.style.display = 'grid';
                     }
                 }
-                loadProducts();
+                // Run after DOM is fully loaded
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', loadProducts);
+                } else {
+                    loadProducts();
+                }
             </script>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 <!-- Product Card 1 -->
                 <div class="product-card bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100 flex flex-col">
                     <a href="item.html" class="block flex flex-col flex-grow">
