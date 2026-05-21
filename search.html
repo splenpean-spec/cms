@@ -10,11 +10,216 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff;
+            background-color: #f5f5f5;
         }
         .aliexpress-red {
             color: #FF4747;
         }
+        .aliexpress-bg-red {
+            background-color: #FF4747;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-card:hover .cart-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cart-btn {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        .product-card img {
+            transition: transform 0.3s ease;
+            min-height: 150px;
+            background-color: #f8f8f8;
+            object-fit: cover;
+        }
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Mega Menu Styles */
+        .mega-menu-container {
+            width: 900px !important;
+            min-height: 520px;
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 1.25rem;
+            z-index: 110;
+            margin-top: 0; /* Remove margin to prevent gap */
+            padding-top: 0.5rem; /* Add padding instead */
+            overflow: visible; /* Changed from hidden to visible */
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        /* Bridge to prevent menu from closing when moving mouse from button to menu */
+        .mega-menu-container::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: transparent;
+        }
+
+        .group:hover .mega-menu-container {
+            display: flex;
+            animation: megaSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes megaSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes subMenuFade {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-subMenuFade {
+            animation: subMenuFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .category-sidebar {
+            width: 240px;
+            background: #fafafa;
+            border-right: 1px solid #f0f0f0;
+            padding: 0.75rem 0;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            border-radius: 1.25rem 0 0 1.25rem;
+        }
+
+        .sidebar-item {
+            position: static;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item > a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.25rem;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: white;
+        }
+
+        .sidebar-item .sub-menu {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 240px;
+            width: 660px;
+            height: 100%;
+            background: white;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            border-radius: 0 1.25rem 1.25rem 0;
+        }
+
+        .sidebar-item:hover .sub-menu {
+            display: block;
+            animation: subMenuFade 0.2s ease-out;
+        }
+
+        @keyframes subMenuFade {
+            from { opacity: 0; transform: translateX(5px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .sidebar-item:hover > a {
+            color: #FF4747;
+            background: white;
+        }
+
+        .sidebar-item:hover > a span {
+            font-weight: 600;
+        }
+
+        .sidebar-item:hover > a i.fa-chevron-right {
+            transform: translateX(3px);
+            color: #FF4747;
+        }
+
+        /* Sub-menu Typography */
+        .sub-menu h3 {
+            color: #111;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sub-menu h4 {
+            color: #222;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid #f5f5f5;
+            padding-bottom: 0.4rem;
+        }
+
+        .sub-link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sub-link-list a {
+            color: #666;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .sub-link-list a:hover {
+            color: #FF4747;
+            padding-left: 2px;
+        }
+
+        /* Recommended Grid */
+        .rec-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .rec-item:hover {
+            transform: translateY(-4px);
+        }
+        .rec-img-wrapper {
+            aspect-ratio: 1;
+            background: #f8f8f8;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .rec-item:hover .rec-img-wrapper {
+            border-color: #ffe4e4;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(255, 71, 71, 0.08);
+        }
+
         .sidebar-scroll::-webkit-scrollbar {
             width: 4px;
         }
@@ -35,7 +240,7 @@
     </style>
 </head>
 <body class="text-gray-800">
-    <!-- Header -->
+    <!-- Top Header -->
     <header class="bg-white border-b sticky top-0 z-50">
         <!-- Main Header Row -->
         <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4 md:gap-6">
@@ -47,32 +252,32 @@
             </div>
 
             <!-- Search Bar (Desktop) -->
-            <div class="hidden md:flex flex-grow max-w-2xl">
+            <div class="hidden md:flex flex-grow max-w-3xl">
                 <form action="search.html" method="GET" class="relative flex items-center w-full">
-                    <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border-2 border-black rounded-full py-2 px-6 focus:outline-none text-sm">
-                    <div class="absolute right-3 flex items-center gap-3 text-gray-400">
-                        <i class="fas fa-camera cursor-pointer hover:text-gray-600"></i>
-                        <div class="w-[1px] h-4 bg-gray-200"></div>
-                        <button type="submit">
-                            <i class="fas fa-search cursor-pointer hover:text-gray-600"></i>
-                        </button>
-                    </div>
+                    <input type="text" placeholder="Search items..." name="q" class="w-full border-2 border-black rounded-full py-2 px-6 focus:outline-none">
+                    <button type="submit" class="absolute right-2 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-search px-2"></i>
+                    </button>
                 </form>
             </div>
 
-            <!-- Right Icons -->
-            <div class="flex items-center gap-4 md:gap-6 text-gray-600">
-                <i class="hidden lg:block fas fa-th-large text-xl cursor-pointer"></i>
+            <!-- Icons -->
+            <div class="flex items-center gap-4 md:gap-6">
+                <div class="hidden lg:flex flex-col items-center cursor-pointer group">
+                    <i class="fas fa-qrcode text-xl group-hover:aliexpress-red"></i>
+                    <span class="text-[10px] md:text-xs mt-1">Download App</span>
+                </div>
                 <!-- Location Selector -->
                 <div class="relative group" id="locationSelector">
                     <div class="flex flex-col items-center cursor-pointer">
                         <div class="flex items-center gap-1">
                             <img id="currentFlag" src="https://flagcdn.com/w20/us.png" alt="US" class="w-5 h-3 object-cover">
+                            <span id="currentCurrency" class="hidden md:inline text-xs font-medium">USD</span>
                         </div>
                     </div>
                     <!-- Dropdown -->
                     <div class="absolute right-0 top-full pt-2 hidden group-hover:block z-[60]">
-                        <div class="bg-white border rounded-xl shadow-xl p-4 w-48 text-gray-800">
+                        <div class="bg-white border rounded-xl shadow-xl p-4 w-48">
                             <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">Ship to / Currency</p>
                             <div class="space-y-2">
                                 <button onclick="updateLocation('us', 'USD', 'United States')" class="flex items-center gap-3 w-full hover:bg-gray-50 p-2 rounded-lg transition-colors">
@@ -95,10 +300,14 @@
                         </div>
                     </div>
                 </div>
-                <i class="far fa-user text-xl cursor-pointer"></i>
-                <div onclick="toggleCart()" class="relative cursor-pointer">
-                    <i class="fas fa-shopping-cart text-xl"></i>
-                    <span class="absolute -top-2 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                <div class="flex flex-col items-center cursor-pointer group">
+                    <i class="far fa-user text-xl group-hover:aliexpress-red"></i>
+                    <span class="hidden md:inline text-xs mt-1">Account</span>
+                </div>
+                <div onclick="toggleCart()" class="flex flex-col items-center cursor-pointer group relative">
+                    <i class="fas fa-shopping-cart text-xl group-hover:aliexpress-red"></i>
+                    <span class="hidden md:inline text-xs mt-1">Cart</span>
+                    <span class="absolute -top-1 -right-2 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
                 </div>
             </div>
         </div>
@@ -106,16 +315,387 @@
         <!-- Search Bar (Mobile) -->
         <div class="md:hidden px-4 pb-3">
             <form action="search.html" method="GET" class="relative flex items-center w-full">
-                <input type="text" placeholder="I'm shopping for..." name="q" class="w-full border-2 border-gray-100 bg-gray-50 rounded-full py-2 px-6 focus:outline-none text-sm transition-colors focus:border-black">
-                <button type="submit" class="absolute right-4 text-gray-400">
+                <input type="text" placeholder="Search items..." name="q" class="w-full border-2 border-gray-100 bg-gray-50 rounded-full py-2 px-6 focus:outline-none focus:border-black transition-colors">
+                <button type="submit" class="absolute right-2 text-gray-400 p-2 rounded-full">
                     <i class="fas fa-search"></i>
                 </button>
             </form>
         </div>
 
         <!-- Navigation Categories -->
-        <nav class="bg-white border-b overflow-x-auto whitespace-nowrap scrollbar-hide hidden md:block">
-            <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium">
+        <nav class="bg-white border-b hidden md:block relative z-40">
+            <div class="container mx-auto px-4 py-2 flex items-center gap-8 text-sm font-medium overflow-visible">
+                <div class="relative group">
+                    <button class="flex items-center gap-2 bg-gray-50 border border-gray-100 px-5 py-2.5 rounded-full hover:bg-gray-100 hover:border-gray-200 transition-all duration-300 cursor-pointer shadow-sm group-hover:bg-white group-hover:shadow-md">
+                        <i class="fas fa-bars text-gray-500 group-hover:text-red-500"></i>
+                        <span class="text-xs font-bold text-gray-700">All Categories</span>
+                        <i class="fas fa-chevron-down text-[10px] text-gray-300 ml-1 group-hover:rotate-180 transition-transform duration-300"></i>
+                    </button>
+                    <!-- Mega Menu for All Categories Button -->
+                    <div class="mega-menu-container group-hover:flex">
+                        <div class="category-sidebar">
+                            <!-- Automotive -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Automotive">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-car text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Automotive</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-thumbs-up text-red-500"></i> Recommended</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Spoilers</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Wheels</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Gauges</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Electronics</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Keys & Remote Systems</a>
+                                                    <a href="#">Gauges & Monitors</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4>Car Care</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Car Protection</a>
+                                                    <a href="#">Paint & Rim Care</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Appliances -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Appliances">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-blender text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Appliances</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-star text-yellow-400"></i> Hot Categories</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S553e11559863412cb928784992524a87M.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Fans</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Kitchen</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Coffee Makers</a>
+                                                    <a href="#">Blenders</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Women's Clothing -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Women's Fashion">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-venus text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Women's Clothing</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-heart text-pink-500"></i> Trending</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/Sc7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Dresses</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Outfits</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Matching Sets</a>
+                                                    <a href="#">Jumpsuits</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Electronics -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Electronics">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-tv text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Electronics</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-bolt text-blue-500"></i> Tech Deals</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Audio</p>
+                                                </div>
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S9387a956163342378a5994f981e494d93.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Smart Watch</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Home Audio</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Speakers</a>
+                                                    <a href="#">Amplifiers</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Blockchain Miner -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Blockchain Miner">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-microchip text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Blockchain Miner</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-link text-orange-500"></i> Mining Gear</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">ASIC</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Hardware</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">ASIC Miners</a>
+                                                    <a href="#">GPU Rigs</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dental -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Dental">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-tooth text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Dental</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-briefcase-medical text-cyan-500"></i> Clinical Supplies</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Tools</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Instruments</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Handpieces</a>
+                                                    <a href="#">Surgical Tools</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Men's Clothing -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Men's Clothing">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-mars text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Men's Clothing</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-user-tie text-blue-600"></i> Men's Style</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S7f0c184c8f584e038084a44f45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Suits</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Top Wear</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">T-Shirts</a>
+                                                    <a href="#">Polo Shirts</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Toys & Games -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Toys & Games">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-gamepad text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Toys & Games</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-puzzle-piece text-purple-500"></i> Fun & Games</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S8f9037f0048e4b779e56475f6e804a604.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Drones</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Outdoor</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Drones</a>
+                                                    <a href="#">RC Cars</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Furniture -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Furniture">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-couch text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Furniture</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                                <div class="sub-menu">
+                                    <div class="grid grid-cols-1 gap-8">
+                                        <div>
+                                            <h3><i class="fas fa-home text-green-600"></i> Home Living</h3>
+                                            <div class="grid grid-cols-6 gap-4">
+                                                <div class="rec-item text-center">
+                                                    <div class="rec-img-wrapper"><img src="https://ae01.alicdn.com/kf/S2c89f7f4585c4909a39f5062a45447a16E.jpg" class="max-h-full"></div>
+                                                    <p class="text-[10px] text-gray-500 mt-2">Sofas</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-8">
+                                            <div>
+                                                <h4>Living Room</h4>
+                                                <div class="sub-link-list">
+                                                    <a href="#">Coffee Tables</a>
+                                                    <a href="#">TV Stands</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Health & Beauty -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Health & Beauty">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-heart text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Health & Beauty</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                            </div>
+
+                            <!-- Dental Equipments -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Dental Equipments">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-tooth text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Dental Equipments</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                            </div>
+
+                            <!-- Commercial & Industrial -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Commercial & Industrial">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-industry text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Commercial & Industrial</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                            </div>
+
+                            <!-- Medical Supplies -->
+                            <div class="sidebar-item">
+                                <a href="category.html?cat=Medical Supplies">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-briefcase-medical text-gray-400 text-sm w-5 text-center"></i>
+                                        <span class="text-xs font-medium">Medical Supplies</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <a href="category.html?cat=bundle deals" class="text-[#FF4747] hover:underline font-bold">Bundle deals</a>
                 <a href="category.html?cat=choice" class="hover:text-red-500">Choice</a>
                 <a href="category.html?cat=superdeals" class="hover:text-red-500">SuperDeals</a>
@@ -123,27 +703,62 @@
                 <a href="category.html?cat=Automotive" class="hover:text-red-500">Automotive</a>
                 <a href="category.html?cat=Appliances" class="hover:text-red-500">Appliances</a>
                 <div class="relative group">
-                    <button class="flex items-center gap-1 cursor-pointer hover:text-red-500 py-2">
+                    <button class="flex items-center gap-1.5 cursor-pointer hover:text-red-500 py-2.5 transition-colors font-medium">
                         <span>More</span>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
+                        <i class="fas fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform duration-300"></i>
                     </button>
                     <!-- More Dropdown -->
-                    <div class="absolute top-full left-0 w-64 bg-white shadow-xl border rounded-xl py-4 hidden group-hover:block z-[100]">
-                        <div class="grid grid-cols-1 gap-1 px-2">
-                            <a href="category.html?cat=Women's Fashion" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Women's Fashion</a>
-                            <a href="category.html?cat=Men's Clothing" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Men's Clothing</a>
-                            <a href="category.html?cat=Toys & Games" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Toys & Games</a>
-                            <a href="category.html?cat=Furniture" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Furniture</a>
-                            <a href="category.html?cat=Beauty & Health" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Beauty & Health</a>
-                            <a href="category.html?cat=Shoes" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Shoes</a>
-                            <a href="category.html?cat=Hair Extensions & Wigs" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Hair Extensions & Wigs</a>
-                            <a href="category.html?cat=Pet Supplies" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Pet Supplies</a>
-                            <a href="category.html?cat=Cell Phones & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Cell Phones & Accessories</a>
-                            <a href="category.html?cat=Electronics" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Electronics</a>
-                            <a href="category.html?cat=Jewelry & Accessories" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Jewelry & Accessories</a>
-                            <a href="category.html?cat=Home & Garden" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs">Home & Garden</a>
-                            <a href="category.html?cat=Blockchain Miner" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Blockchain Miner</a>
-                            <a href="category.html?cat=Dental" class="px-4 py-2 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-bold">Dental</a>
+                    <div class="absolute top-full left-0 w-64 bg-white shadow-2xl border border-gray-100 rounded-2xl py-3 hidden group-hover:block z-[100] animate-megaSlideIn mt-1">
+                        <div class="grid grid-cols-1 gap-0.5 px-2">
+                            <p class="text-[10px] font-bold text-gray-400 px-4 py-2 uppercase tracking-wider">More Categories</p>
+                            <a href="category.html?cat=Women's Fashion" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-venus text-gray-300 w-4 text-center"></i>
+                                <span>Women's Fashion</span>
+                            </a>
+                            <a href="category.html?cat=Men's Clothing" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-mars text-gray-300 w-4 text-center"></i>
+                                <span>Men's Clothing</span>
+                            </a>
+                            <a href="category.html?cat=Toys & Games" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-gamepad text-gray-300 w-4 text-center"></i>
+                                <span>Toys & Games</span>
+                            </a>
+                            <a href="category.html?cat=Furniture" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-couch text-gray-300 w-4 text-center"></i>
+                                <span>Furniture</span>
+                            </a>
+                            <a href="category.html?cat=Beauty & Health" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-heart text-gray-300 w-4 text-center"></i>
+                                <span>Beauty & Health</span>
+                            </a>
+                            <a href="category.html?cat=Shoes" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-shoe-prints text-gray-300 w-4 text-center"></i>
+                                <span>Shoes</span>
+                            </a>
+                            <a href="category.html?cat=Blockchain Miner" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors font-bold">
+                                <i class="fas fa-microchip text-red-400 w-4 text-center"></i>
+                                <span>Blockchain Miner</span>
+                            </a>
+                            <a href="category.html?cat=Dental" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors font-bold">
+                                <i class="fas fa-tooth text-red-400 w-4 text-center"></i>
+                                <span>Dental</span>
+                            </a>
+                            <a href="category.html?cat=Health & Beauty" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-heart text-gray-300 w-4 text-center"></i>
+                                <span>Health & Beauty</span>
+                            </a>
+                            <a href="category.html?cat=Dental Equipments" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-tooth text-gray-300 w-4 text-center"></i>
+                                <span>Dental Equipments</span>
+                            </a>
+                            <a href="category.html?cat=Commercial & Industrial" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-industry text-gray-300 w-4 text-center"></i>
+                                <span>Commercial & Industrial</span>
+                            </a>
+                            <a href="category.html?cat=Medical Supplies" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-xs transition-colors">
+                                <i class="fas fa-briefcase-medical text-gray-300 w-4 text-center"></i>
+                                <span>Medical Supplies</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -153,126 +768,203 @@
 
     <div class="container mx-auto px-4 flex flex-col md:flex-row gap-6 md:gap-8 py-6">
         <!-- Sidebar -->
-        <aside class="hidden md:block w-64 flex-shrink-0 sidebar-scroll overflow-y-auto h-[calc(100vh-120px)] sticky top-24">
+        <aside class="hidden md:block w-64 flex-shrink-0 sidebar-scroll overflow-y-auto h-[calc(100vh-120px)] sticky top-24 bg-white rounded-2xl shadow-sm border border-gray-100 py-6 px-4">
             <div class="space-y-6">
+                <!-- Categories (Same as Homepage) -->
+                <div>
+                    <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-4">Categories</h3>
+                    <div class="space-y-0.5">
+                        <a href="category.html?cat=Automotive" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-car text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Automotive</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Appliances" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-blender text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Appliances</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Women's Fashion" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-venus text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Women's Fashion</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Men's Clothing" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-mars text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Men's Clothing</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Electronics" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-tv text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Electronics</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Toys & Games" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-gamepad text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Toys & Games</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Furniture" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-couch text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Furniture</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Blockchain Miner" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group font-bold">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-microchip text-red-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs">Blockchain Miner</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Dental" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group font-bold">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-tooth text-red-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs">Dental</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                        <a href="category.html?cat=Health & Beauty" class="flex items-center justify-between px-3 py-2 hover:bg-red-50 hover:text-red-500 rounded-xl transition-colors group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-heart text-gray-400 group-hover:text-red-500 w-5 text-center text-xs"></i>
+                                <span class="text-xs font-medium">Health & Beauty</span>
+                            </div>
+                            <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Stock & discounts -->
                 <div>
-                    <h3 class="font-bold text-sm mb-3">Stock & discounts</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                    <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-4 border-t pt-6">Stock & discounts</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Free shipping</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Free shipping</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">SuperDeals</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">SuperDeals</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Delivery & service -->
                 <div>
-                    <h3 class="font-bold text-sm mb-3">Delivery & service</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                    <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-4">Delivery & service</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Choice</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Choice</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Quality & trust -->
                 <div>
-                    <h3 class="font-bold text-sm mb-3">Quality & trust</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                    <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-4">Quality & trust</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">4 stars & up</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">4 stars & up</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Premium Quality</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Premium Quality</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Color -->
                 <div>
-                    <h3 class="font-bold text-sm mb-3 flex items-center justify-between">
+                    <h3 class="font-bold text-xs text-gray-400 uppercase tracking-wider mb-4 flex items-center justify-between">
                         Color
-                        <i class="fas fa-chevron-up text-[10px] text-gray-400"></i>
+                        <i class="fas fa-chevron-up text-[8px] text-gray-300"></i>
                     </h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">All</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">All</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">White</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">White</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Silver</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Silver</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Black</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Black</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Grey</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Grey</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Red</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Red</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Pink</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Pink</span>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden peer">
-                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px]">
+                            <div class="custom-checkbox peer-checked:bg-black peer-checked:border-black flex items-center justify-center text-white text-[10px] transition-all">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <span class="text-xs text-gray-600 group-hover:text-black">Blue</span>
+                            <span class="text-xs text-gray-600 group-hover:text-black transition-colors">Blue</span>
                         </label>
                     </div>
                 </div>
@@ -652,7 +1344,13 @@
             
             // Update Header
             const currentFlag = document.getElementById('currentFlag');
+            const currentCurrency = document.getElementById('currentCurrency');
             if (currentFlag) currentFlag.src = `https://flagcdn.com/w20/${location.flagCode}.png`;
+            if (currentCurrency) currentCurrency.textContent = location.currency;
+
+            // Update all static currency displays
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = '$');
+            document.querySelectorAll('.currency-code').forEach(el => el.textContent = location.currency);
 
             updateCartCount();
         }
@@ -660,7 +1358,7 @@
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const count = cart.reduce((sum, item) => sum + item.qty, 0);
-            const cartCountEl = document.querySelector('.fa-shopping-cart + span') || document.querySelector('.relative.cursor-pointer span:last-child');
+            const cartCountEl = document.querySelector('.fa-shopping-cart + span + span') || document.querySelector('.relative.cursor-pointer span:last-child');
             if (cartCountEl) cartCountEl.textContent = count;
         }
 
